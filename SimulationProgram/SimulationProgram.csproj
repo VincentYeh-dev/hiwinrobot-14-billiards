@@ -96,5 +96,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExclusiveProgram\ExclusiveProgram.csproj">
+      <Project>{6a863d8c-94ac-462d-bbfd-9d545f4f00b6}</Project>
+      <Name>ExclusiveProgram</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MainForm\MainForm.csproj">
+      <Project>{95c2ddf6-1fd1-42ae-bf56-ef1391da6d5d}</Project>
+      <Name>MainForm</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
