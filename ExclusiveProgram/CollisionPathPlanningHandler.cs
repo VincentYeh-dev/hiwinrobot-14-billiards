@@ -42,5 +42,16 @@ namespace ExclusiveProgram
             return Math.Abs(Math.Sqrt(Math.Pow(a.X - b.X, 2) +
                                       Math.Pow(a.Y - b.Y, 2)));
         }
+
+        /// <summary>
+        /// 取得斜率。
+        /// </summary>
+        /// <param name="a">點 A。</param>
+        /// <param name="b">點 B。</param>
+        /// <returns>斜率。</returns>
+        private static double GetSlope(PointF a, PointF b)
+        {
+            return (b.Y - a.Y) / (b.X - a.X);
+        }
     }
 }
