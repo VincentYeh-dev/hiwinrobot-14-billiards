@@ -27,6 +27,24 @@ namespace ExclusiveProgram
             return isLegalPath;
         }
 
+        /// <summary>
+        /// 取得假母球的位置。
+        /// </summary>
+        /// <param name="objectBall">目標球。</param>
+        /// <param name="goalPocket">目標球袋。</param>
+        /// <returns>假母球的位置。</returns>
+        public static PointF GetGhostCueBallPosition(Ball objectBall, Pocket goalPocket)
+        {
+            var m = GetSlope(objectBall.Position, goalPocket.Position);
+            var angle = ConvertSlopToAngle(m);
+
+            var offsetX = GetProjectionDistanceX(angle, 2 * _ballRadius);
+            var offsetY = GetProjectionDistanceY(angle, 2 * _ballRadius);
+
+            return new PointF(objectBall.Position.X - (float)offsetX,
+                              objectBall.Position.Y - (float)offsetY);
+        }
+
         private static Ball FindCueBall(List<Ball> balls)
         {
             foreach (var b in balls)
@@ -37,24 +55,6 @@ namespace ExclusiveProgram
                 }
             }
             throw new Exception("Couldn't find any cue ball.");
-        }
-
-        /// <summary>
-        /// 取得假母球的位置。
-        /// </summary>
-        /// <param name="objectBall">目標球。</param>
-        /// <param name="goalPocket">目標球袋。</param>
-        /// <returns>假母球的位置。</returns>
-        private static PointF GetGhostCueBallPosition(Ball objectBall, Pocket goalPocket)
-        {
-            var m = GetSlope(objectBall.Position, goalPocket.Position);
-            var angle = ConvertSlopToAngle(m);
-
-            var offsetX = GetProjectionDistanceX(angle, 2 * _ballRadius);
-            var offsetY = GetProjectionDistanceY(angle, 2 * _ballRadius);
-
-            return new PointF(objectBall.Position.X - (float)offsetX,
-                              objectBall.Position.Y - (float)offsetY);
         }
 
         /// <summary>
