@@ -31,6 +31,8 @@ namespace ExclusiveProgram
             throw new Exception("Couldn't find any cue ball.");
         }
 
+        #region Basic Math Functions
+
         /// <summary>
         /// 取得兩點之間的距離。
         /// </summary>
@@ -53,5 +55,39 @@ namespace ExclusiveProgram
         {
             return (b.Y - a.Y) / (b.X - a.X);
         }
+
+        /// <summary>
+        /// 從斜率取得角度。
+        /// </summary>
+        /// <param name="slope">斜率。</param>
+        /// <returns>角度。</returns>
+        private static double ConvertSlopToAngle(double slope)
+        {
+            return Math.Atan(slope);
+        }
+
+        /// <summary>
+        /// 取得 X 軸上的投影長度，即鄰邊長度。
+        /// </summary>
+        /// <param name="angle">角度。</param>
+        /// <param name="hypotenuse">斜邊長度。</param>
+        /// <returns>X 軸上的投影長度。</returns>
+        private static double GetProjectionDistanceX(double angle, double hypotenuse)
+        {
+            return Math.Cos(angle) * hypotenuse;
+        }
+
+        /// <summary>
+        /// 取得 Y 軸上的投影長度，即對邊長度。
+        /// </summary>
+        /// <param name="angle">角度。</param>
+        /// <param name="hypotenuse">斜邊長度。</param>
+        /// <returns>Y 軸上的投影長度。</returns>
+        private static double GetProjectionDistanceY(double angle, double hypotenuse)
+        {
+            return Math.Sin(angle) * hypotenuse;
+        }
+
+        #endregion Basic Math Functions
     }
 }
