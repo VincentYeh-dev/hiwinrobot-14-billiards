@@ -15,7 +15,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 球的半徑（單位：mm）。
         /// </summary>
-        private static readonly double _ballRadius = 10;
+        private static readonly double _ballRadius = (37.85 / 2);
 
         public static bool Calculate(List<Ball> allTheBalls, Ball objectBall, Pocket pocket)
         {
