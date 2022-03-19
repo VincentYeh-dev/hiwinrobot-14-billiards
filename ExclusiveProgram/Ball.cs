@@ -48,5 +48,10 @@ namespace ExclusiveProgram
             Type = type;
             Position = position;
         }
+
+        /// <summary>
+        /// 是母球。
+        /// </summary>
+        public bool IsCueBall { get => Type == BallType.CueBall; }
     }
 }
