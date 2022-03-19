@@ -33,7 +33,7 @@ namespace SimulationProgram
             // 底色。
             var img = new Image<Bgr, byte>(600, 400, new Bgr(035, 100, 035));
 
-            var pocketPosition = new PointF(300, 0);
+            var pocketPosition = GetPocketPosition();
             var pocket = new CircleF(pocketPosition, _pocketRadius);
             img.Draw(pocket, new Bgr(0, 0, 0), 3);
 
@@ -58,6 +58,39 @@ namespace SimulationProgram
             img.Draw(l2, new Bgr(5, 5, 155), 1);
 
             pictureBoxMain.Image = img.ToBitmap();
+        }
+
+        private PointF GetPocketPosition()
+        {
+            PointF positon;
+            switch (numericUpDownPocketType.Value)
+            {
+                case 0:
+                    positon = new PointF(0, 0);
+                    break;
+
+                case 1:
+                    positon = new PointF(300, 0);
+                    break;
+
+                case 2:
+                    positon = new PointF(600, 0);
+                    break;
+
+                case 3:
+                    positon = new PointF(0, 400);
+                    break;
+
+                case 4:
+                    positon = new PointF(300, 400);
+                    break;
+
+                default:
+                case 5:
+                    positon = new PointF(600, 400);
+                    break;
+            }
+            return positon;
         }
 
         private PointF GetCueBallPosition()

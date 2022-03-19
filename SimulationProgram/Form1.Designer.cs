@@ -35,6 +35,8 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.numericUpDownObjBallY = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownObjBallX = new System.Windows.Forms.NumericUpDown();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownPocketType = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallX)).BeginInit();
@@ -42,6 +44,8 @@
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallX)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPocketType)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBoxMain
@@ -146,11 +150,40 @@
             0});
             this.numericUpDownObjBallX.ValueChanged += new System.EventHandler(this.numericUpDownObjBallX_ValueChanged);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.numericUpDownPocketType);
+            this.groupBox3.Location = new System.Drawing.Point(1576, 511);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(240, 162);
+            this.groupBox3.TabIndex = 1;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Pocket";
+            // 
+            // numericUpDownPocketType
+            // 
+            this.numericUpDownPocketType.Location = new System.Drawing.Point(45, 50);
+            this.numericUpDownPocketType.Maximum = new decimal(new int[] {
+            6,
+            0,
+            0,
+            0});
+            this.numericUpDownPocketType.Name = "numericUpDownPocketType";
+            this.numericUpDownPocketType.Size = new System.Drawing.Size(120, 35);
+            this.numericUpDownPocketType.TabIndex = 0;
+            this.numericUpDownPocketType.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownPocketType.ValueChanged += new System.EventHandler(this.numericUpDownObjBallX_ValueChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1919, 914);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBoxMain);
@@ -163,6 +196,8 @@
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallX)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPocketType)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -176,6 +211,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.NumericUpDown numericUpDownObjBallY;
         private System.Windows.Forms.NumericUpDown numericUpDownObjBallX;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.NumericUpDown numericUpDownPocketType;
     }
 }
 
