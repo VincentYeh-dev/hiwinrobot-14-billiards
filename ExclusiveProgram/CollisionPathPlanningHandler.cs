@@ -30,5 +30,17 @@ namespace ExclusiveProgram
             }
             throw new Exception("Couldn't find any cue ball.");
         }
+
+        /// <summary>
+        /// 取得兩點之間的距離。
+        /// </summary>
+        /// <param name="a">點 A。</param>
+        /// <param name="b">點 B。</param>
+        /// <returns>距離。</returns>
+        private static double GetDistance(PointF a, PointF b)
+        {
+            return Math.Abs(Math.Sqrt(Math.Pow(a.X - b.X, 2) +
+                                      Math.Pow(a.Y - b.Y, 2)));
+        }
     }
 }
