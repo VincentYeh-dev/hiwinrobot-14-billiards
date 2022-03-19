@@ -24,6 +24,8 @@ namespace SimulationProgram
         public Form1()
         {
             InitializeComponent();
+
+            UpdateImage();
         }
 
         private void UpdateImage()
@@ -31,17 +33,17 @@ namespace SimulationProgram
             // 底色。
             var img = new Image<Bgr, byte>(600, 400, new Bgr(035, 100, 035));
 
-            var cueBallPosition = new PointF(50, 200);
-            var cueBall = new CircleF(cueBallPosition, _ballRadius);
-            img.Draw(cueBall, new Bgr(255, 255, 255), _ballThickness);
-
-            var objBallPosition = new PointF(230, 140);
-            var objBall = new CircleF(objBallPosition, _ballRadius);
-            img.Draw(objBall, new Bgr(055, 055, 255), _ballThickness);
-
             var pocketPosition = new PointF(300, 0);
             var pocket = new CircleF(pocketPosition, _pocketRadius);
             img.Draw(pocket, new Bgr(0, 0, 0), 3);
+
+            var cueBallPosition = GetCueBallPosition();
+            var cueBall = new CircleF(cueBallPosition, _ballRadius);
+            img.Draw(cueBall, new Bgr(255, 255, 255), _ballThickness);
+
+            var objBallPosition = GetObjBallPosition();
+            var objBall = new CircleF(objBallPosition, _ballRadius);
+            img.Draw(objBall, new Bgr(055, 055, 255), _ballThickness);
 
             var ghostPosition = CollisionPathPlanningHandler.GetGhostCueBallPosition(
                 new Ball(BallType.NumberedBall, objBallPosition), new Pocket(PocketType.Side, pocketPosition));
@@ -56,6 +58,36 @@ namespace SimulationProgram
             img.Draw(l2, new Bgr(5, 5, 155), 1);
 
             pictureBoxMain.Image = img.ToBitmap();
+        }
+
+        private PointF GetCueBallPosition()
+        {
+            return new PointF((float)numericUpDownCueBallX.Value, (float)numericUpDownCueBallY.Value);
+        }
+
+        private PointF GetObjBallPosition()
+        {
+            return new PointF((float)numericUpDownObjBallX.Value, (float)numericUpDownObjBallY.Value);
+        }
+
+        private void numericUpDownCueBallX_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+
+        private void numericUpDownCueBallY_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+
+        private void numericUpDownObjBallX_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+
+        private void numericUpDownObjBallY_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
         }
     }
 }
