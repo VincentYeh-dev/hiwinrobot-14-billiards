@@ -12,10 +12,18 @@ namespace ExclusiveProgram
     /// </summary>
     public class CollisionPathPlanningHandler
     {
+        /// <summary>
+        /// 球的半徑（單位：mm）。
+        /// </summary>
+        private static readonly double _ballRadius = 10;
+
         public static bool Calculate(List<Ball> allTheBalls, Ball objectBall, Pocket pocket)
         {
             var isLegalPath = false;
             var cueBall = FindCueBall(allTheBalls);
+
+            throw new NotImplementedException();
+
             return isLegalPath;
         }
 
@@ -29,6 +37,42 @@ namespace ExclusiveProgram
                 }
             }
             throw new Exception("Couldn't find any cue ball.");
+        }
+
+        /// <summary>
+        /// 取得假母球的位置。
+        /// </summary>
+        /// <param name="objectBall">目標球。</param>
+        /// <param name="goalPocket">目標球袋。</param>
+        /// <returns>假母球的位置。</returns>
+        private static PointF GetGhostCueBallPosition(Ball objectBall, Pocket goalPocket)
+        {
+            var m = GetSlope(objectBall.Position, goalPocket.Position);
+            var angle = ConvertSlopToAngle(m);
+
+            var offsetX = GetProjectionDistanceX(angle, 2 * _ballRadius);
+            var offsetY = GetProjectionDistanceY(angle, 2 * _ballRadius);
+
+            return new PointF(objectBall.Position.X - (float)offsetX,
+                              objectBall.Position.Y - (float)offsetY);
+        }
+
+        /// <summary>
+        /// 取得假母球與母球之間的夾角。
+        /// </summary>
+        /// <param name="cueBall">母球。</param>
+        /// <param name="ghostCueBallPosition">假母球位置。</param>
+        /// <returns>夾角。</returns>
+        private static double GetGhostCueBallAngle(Ball cueBall, PointF ghostCueBallPosition)
+        {
+            var m = GetSlope(cueBall.Position, ghostCueBallPosition);
+            return ConvertSlopToAngle(m);
+        }
+
+        // TODO
+        private static bool IsPossibleGhostCueBallPosition(Ball cueBall, PointF ghostCueBallPosition)
+        {
+            throw new NotImplementedException();
         }
 
         #region Basic Math Functions
