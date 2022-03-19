@@ -30,8 +30,8 @@
         {
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.numericUpDownCueBallX = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownCueBallY = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownCueBallX = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.numericUpDownObjBallY = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownObjBallX = new System.Windows.Forms.NumericUpDown();
@@ -39,8 +39,8 @@
             this.numericUpDownPocketType = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallX)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallX)).BeginInit();
@@ -67,24 +67,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "CueBall";
             // 
-            // numericUpDownCueBallX
-            // 
-            this.numericUpDownCueBallX.Location = new System.Drawing.Point(45, 50);
-            this.numericUpDownCueBallX.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownCueBallX.Name = "numericUpDownCueBallX";
-            this.numericUpDownCueBallX.Size = new System.Drawing.Size(120, 35);
-            this.numericUpDownCueBallX.TabIndex = 0;
-            this.numericUpDownCueBallX.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownCueBallX.ValueChanged += new System.EventHandler(this.numericUpDownCueBallX_ValueChanged);
-            // 
             // numericUpDownCueBallY
             // 
             this.numericUpDownCueBallY.Location = new System.Drawing.Point(45, 104);
@@ -97,11 +79,29 @@
             this.numericUpDownCueBallY.Size = new System.Drawing.Size(120, 35);
             this.numericUpDownCueBallY.TabIndex = 0;
             this.numericUpDownCueBallY.Value = new decimal(new int[] {
-            200,
+            300,
             0,
             0,
             0});
             this.numericUpDownCueBallY.ValueChanged += new System.EventHandler(this.numericUpDownCueBallY_ValueChanged);
+            // 
+            // numericUpDownCueBallX
+            // 
+            this.numericUpDownCueBallX.Location = new System.Drawing.Point(45, 50);
+            this.numericUpDownCueBallX.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownCueBallX.Name = "numericUpDownCueBallX";
+            this.numericUpDownCueBallX.Size = new System.Drawing.Size(120, 35);
+            this.numericUpDownCueBallX.TabIndex = 0;
+            this.numericUpDownCueBallX.Value = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.numericUpDownCueBallX.ValueChanged += new System.EventHandler(this.numericUpDownCueBallX_ValueChanged);
             // 
             // groupBox2
             // 
@@ -126,7 +126,7 @@
             this.numericUpDownObjBallY.Size = new System.Drawing.Size(120, 35);
             this.numericUpDownObjBallY.TabIndex = 0;
             this.numericUpDownObjBallY.Value = new decimal(new int[] {
-            140,
+            200,
             0,
             0,
             0});
@@ -144,7 +144,7 @@
             this.numericUpDownObjBallX.Size = new System.Drawing.Size(120, 35);
             this.numericUpDownObjBallX.TabIndex = 0;
             this.numericUpDownObjBallX.Value = new decimal(new int[] {
-            230,
+            300,
             0,
             0,
             0});
@@ -191,8 +191,8 @@
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallX)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallX)).EndInit();

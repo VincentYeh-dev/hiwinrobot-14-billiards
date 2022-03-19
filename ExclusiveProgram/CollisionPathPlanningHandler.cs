@@ -41,8 +41,19 @@ namespace ExclusiveProgram
             var offsetX = GetProjectionDistanceX(angle, 2 * _ballRadius);
             var offsetY = GetProjectionDistanceY(angle, 2 * _ballRadius);
 
-            return new PointF(objectBall.Position.X - (float)offsetX,
-                              objectBall.Position.Y - (float)offsetY);
+            var position = new PointF();
+            if (goalPocket.Position.X < objectBall.Position.X)
+            {
+                position.X = objectBall.Position.X + (float)offsetX;
+                position.Y = objectBall.Position.Y + (float)offsetY;
+            }
+            else
+            {
+                position.X = objectBall.Position.X - (float)offsetX;
+                position.Y = objectBall.Position.Y - (float)offsetY;
+            }
+
+            return position;
         }
 
         private static Ball FindCueBall(List<Ball> balls)
