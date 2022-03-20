@@ -20,6 +20,7 @@ namespace SimulationProgram
         private const int _ballThickness = 5;
         private const float _ballRadius = (float)((37.85 / 2) - (_ballThickness / 2));
         private const float _pocketRadius = 20;
+        private bool _mouseDown = false;
 
         public Form1()
         {
@@ -48,8 +49,21 @@ namespace SimulationProgram
             var ghostPosition = CollisionPathPlanningHandler.GetGhostCueBallPosition(
                 new Ball(BallType.NumberedBall, objBallPosition), new Pocket(PocketType.Side, pocketPosition));
 
+            var aa = CollisionPathPlanningHandler.GetAttackAngle(
+                new Ball(BallType.CueBall, cueBallPosition), ghostPosition, new Pocket(PocketType.Side, pocketPosition));
+            labelAttackAngle.Text = aa.ToString();
+
+            var isPassible = CollisionPathPlanningHandler.IsPossibleGhostCueBallPosition(
+                new Ball(BallType.CueBall, cueBallPosition), ghostPosition, new Pocket(PocketType.Side, pocketPosition));
+
             var ghostBall = new CircleF(ghostPosition, _ballRadius);
             img.Draw(ghostBall, new Bgr(055, 055, 055), _ballThickness);
+
+            if (!isPassible)
+            {
+                var ghostCross = new Cross2DF(ghostPosition, _ballRadius, _ballRadius);
+                img.Draw(ghostCross, new Bgr(0, 0, 255), 2);
+            }
 
             var l1 = new LineSegment2DF(pocketPosition, ghostPosition);
             img.Draw(l1, new Bgr(155, 155, 155), 1);
@@ -120,6 +134,35 @@ namespace SimulationProgram
 
         private void numericUpDownObjBallY_ValueChanged(object sender, EventArgs e)
         {
+            UpdateImage();
+        }
+
+        private void pictureBoxMain_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateBallPositionByMouse(e);
+        }
+
+        private void pictureBoxMain_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                UpdateBallPositionByMouse(e);
+            }
+        }
+
+        private void UpdateBallPositionByMouse(MouseEventArgs e)
+        {
+            var mousePosition = e.Location;
+            if (radioButtonCueBall.Checked)
+            {
+                numericUpDownCueBallX.Value = mousePosition.X;
+                numericUpDownCueBallY.Value = mousePosition.Y;
+            }
+            else if (radioButtonObjBall.Checked)
+            {
+                numericUpDownObjBallX.Value = mousePosition.X;
+                numericUpDownObjBallY.Value = mousePosition.Y;
+            }
             UpdateImage();
         }
     }

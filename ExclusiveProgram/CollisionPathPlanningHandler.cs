@@ -56,6 +56,40 @@ namespace ExclusiveProgram
             return position;
         }
 
+        public static double GetAttackAngle(Ball cueBall, PointF ghostCueBallPosition, Pocket goalPocket)
+        {
+            var mL1 = GetSlope(ghostCueBallPosition, goalPocket.Position);
+            var mL2 = GetSlope(cueBall.Position, ghostCueBallPosition);
+            var angle = ConvertRadToDegree(GetAngleBetweenTwoLine(mL1, mL2));
+            return angle;
+        }
+
+        // TODO
+        public static bool IsPossibleGhostCueBallPosition(Ball cueBall, PointF ghostCueBallPosition, Pocket goalPocket)
+        {
+            var isPossible = false;
+
+            var mL1 = GetSlope(ghostCueBallPosition, goalPocket.Position);
+            var mL2 = GetSlope(cueBall.Position, ghostCueBallPosition);
+            var angle = ConvertRadToDegree(GetAngleBetweenTwoLine(mL1, mL2));
+
+            if (cueBall.Position.X > ghostCueBallPosition.X)
+            {
+                angle = 180 - angle;
+            }
+
+            if (Math.Abs(angle) >= 90)
+            {
+                isPossible = false;
+            }
+            else
+            {
+                isPossible = true;
+            }
+
+            return isPossible;
+        }
+
         private static Ball FindCueBall(List<Ball> balls)
         {
             foreach (var b in balls)
@@ -78,12 +112,6 @@ namespace ExclusiveProgram
         {
             var m = GetSlope(cueBall.Position, ghostCueBallPosition);
             return ConvertSlopToAngle(m);
-        }
-
-        // TODO
-        private static bool IsPossibleGhostCueBallPosition(Ball cueBall, PointF ghostCueBallPosition)
-        {
-            throw new NotImplementedException();
         }
 
         #region Basic Math Functions
@@ -141,6 +169,24 @@ namespace ExclusiveProgram
         private static double GetProjectionDistanceY(double angle, double hypotenuse)
         {
             return Math.Sin(angle) * hypotenuse;
+        }
+
+        private static double GetAngleBetweenTwoLine(double slopA, double slopB)
+        {
+            var angleA = ConvertSlopToAngle((double)slopA);
+            var angleB = ConvertSlopToAngle((double)slopB);
+            var angle = angleB - angleA;
+            return angle;
+        }
+
+        private static double ConvertDegreeToRad(double degraa)
+        {
+            return degraa * (Math.PI / 180.0);
+        }
+
+        private static double ConvertRadToDegree(double rad)
+        {
+            return rad * (180.0 / Math.PI);
         }
 
         #endregion Basic Math Functions
