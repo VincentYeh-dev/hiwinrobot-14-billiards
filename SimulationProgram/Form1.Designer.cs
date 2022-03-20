@@ -37,6 +37,9 @@
             this.numericUpDownObjBallX = new System.Windows.Forms.NumericUpDown();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.numericUpDownPocketType = new System.Windows.Forms.NumericUpDown();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.radioButtonObjBall = new System.Windows.Forms.RadioButton();
+            this.radioButtonCueBall = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallY)).BeginInit();
@@ -46,6 +49,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallX)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPocketType)).BeginInit();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBoxMain
@@ -55,6 +59,8 @@
             this.pictureBoxMain.Size = new System.Drawing.Size(1512, 890);
             this.pictureBoxMain.TabIndex = 0;
             this.pictureBoxMain.TabStop = false;
+            this.pictureBoxMain.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseDown);
+            this.pictureBoxMain.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBoxMain_MouseMove);
             // 
             // groupBox1
             // 
@@ -178,11 +184,46 @@
             0});
             this.numericUpDownPocketType.ValueChanged += new System.EventHandler(this.numericUpDownObjBallX_ValueChanged);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.radioButtonObjBall);
+            this.groupBox4.Controls.Add(this.radioButtonCueBall);
+            this.groupBox4.Location = new System.Drawing.Point(1576, 720);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(200, 136);
+            this.groupBox4.TabIndex = 2;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Ball";
+            // 
+            // radioButtonObjBall
+            // 
+            this.radioButtonObjBall.AutoSize = true;
+            this.radioButtonObjBall.Location = new System.Drawing.Point(6, 74);
+            this.radioButtonObjBall.Name = "radioButtonObjBall";
+            this.radioButtonObjBall.Size = new System.Drawing.Size(162, 33);
+            this.radioButtonObjBall.TabIndex = 0;
+            this.radioButtonObjBall.TabStop = true;
+            this.radioButtonObjBall.Text = "Object Ball";
+            this.radioButtonObjBall.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonCueBall
+            // 
+            this.radioButtonCueBall.AutoSize = true;
+            this.radioButtonCueBall.Checked = true;
+            this.radioButtonCueBall.Location = new System.Drawing.Point(7, 35);
+            this.radioButtonCueBall.Name = "radioButtonCueBall";
+            this.radioButtonCueBall.Size = new System.Drawing.Size(135, 33);
+            this.radioButtonCueBall.TabIndex = 0;
+            this.radioButtonCueBall.TabStop = true;
+            this.radioButtonCueBall.Text = "Cue Ball";
+            this.radioButtonCueBall.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1919, 914);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -198,6 +239,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownObjBallX)).EndInit();
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPocketType)).EndInit();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -213,6 +256,9 @@
         private System.Windows.Forms.NumericUpDown numericUpDownObjBallX;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.NumericUpDown numericUpDownPocketType;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.RadioButton radioButtonObjBall;
+        private System.Windows.Forms.RadioButton radioButtonCueBall;
     }
 }
 
