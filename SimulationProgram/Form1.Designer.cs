@@ -40,6 +40,7 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.radioButtonObjBall = new System.Windows.Forms.RadioButton();
             this.radioButtonCueBall = new System.Windows.Forms.RadioButton();
+            this.labelAttackAngle = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCueBallY)).BeginInit();
@@ -218,11 +219,21 @@
             this.radioButtonCueBall.Text = "Cue Ball";
             this.radioButtonCueBall.UseVisualStyleBackColor = true;
             // 
+            // labelAttackAngle
+            // 
+            this.labelAttackAngle.AutoSize = true;
+            this.labelAttackAngle.Location = new System.Drawing.Point(1576, 873);
+            this.labelAttackAngle.Name = "labelAttackAngle";
+            this.labelAttackAngle.Size = new System.Drawing.Size(79, 29);
+            this.labelAttackAngle.TabIndex = 3;
+            this.labelAttackAngle.Text = "label1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1919, 914);
+            this.Controls.Add(this.labelAttackAngle);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -242,6 +253,7 @@
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -259,6 +271,7 @@
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.RadioButton radioButtonObjBall;
         private System.Windows.Forms.RadioButton radioButtonCueBall;
+        private System.Windows.Forms.Label labelAttackAngle;
     }
 }
 
