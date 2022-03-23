@@ -51,7 +51,7 @@ namespace ExclusiveProgram
             var m = GetSlope(objectBallPosition, pocketPosition);
             var angle = ConvertSlopToAngle(m);
 
-            // 以夾角和對邊長（球的直徑）計算鄰邊長（X）和對邊長（Y）。
+            // 以夾角和斜邊長（球的直徑）計算鄰邊長（X）和對邊長（Y）。
             var offsetX = GetProjectionDistanceX(angle, 2 * _ballRadius);
             var offsetY = GetProjectionDistanceY(angle, 2 * _ballRadius);
 
