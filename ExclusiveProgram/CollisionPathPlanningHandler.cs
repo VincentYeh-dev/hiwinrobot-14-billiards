@@ -17,6 +17,7 @@ namespace ExclusiveProgram
         /// </summary>
         private static readonly double _ballRadius = (37.85 / 2);
 
+        // TODO
         public static bool Calculate(List<Ball> allTheBalls, Ball objectBall, Pocket pocket)
         {
             var isLegalPath = false;
@@ -31,49 +32,101 @@ namespace ExclusiveProgram
         /// 取得假母球的位置。
         /// </summary>
         /// <param name="objectBall">目標球。</param>
-        /// <param name="goalPocket">目標球袋。</param>
+        /// <param name="goalPocket">球袋。</param>
         /// <returns>假母球的位置。</returns>
         public static PointF GetGhostCueBallPosition(Ball objectBall, Pocket goalPocket)
         {
-            var m = GetSlope(objectBall.Position, goalPocket.Position);
+            return GetGhostCueBallPosition(objectBall.Position, goalPocket.Position);
+        }
+
+        /// <summary>
+        /// 取得假母球的位置。
+        /// </summary>
+        /// <param name="objectBallPosition">目標球位置。</param>
+        /// <param name="pocketPosition">球袋位置。</param>
+        /// <returns>假母球的位置。</returns>
+        public static PointF GetGhostCueBallPosition(PointF objectBallPosition, PointF pocketPosition)
+        {
+            // 計算斜率、夾角。
+            var m = GetSlope(objectBallPosition, pocketPosition);
             var angle = ConvertSlopToAngle(m);
 
+            // 以夾角和對邊長（球的直徑）計算鄰邊長（X）和對邊長（Y）。
             var offsetX = GetProjectionDistanceX(angle, 2 * _ballRadius);
             var offsetY = GetProjectionDistanceY(angle, 2 * _ballRadius);
 
+            // 將目標球位置向後延伸一個球的直徑即爲假母球位置。
             var position = new PointF();
-            if (goalPocket.Position.X < objectBall.Position.X)
+            if (pocketPosition.X < objectBallPosition.X)
             {
-                position.X = objectBall.Position.X + (float)offsetX;
-                position.Y = objectBall.Position.Y + (float)offsetY;
+                position.X = objectBallPosition.X + (float)offsetX;
+                position.Y = objectBallPosition.Y + (float)offsetY;
             }
             else
             {
-                position.X = objectBall.Position.X - (float)offsetX;
-                position.Y = objectBall.Position.Y - (float)offsetY;
+                position.X = objectBallPosition.X - (float)offsetX;
+                position.Y = objectBallPosition.Y - (float)offsetY;
             }
 
             return position;
         }
 
-        public static double GetAttackAngle(Ball cueBall, PointF ghostCueBallPosition, Pocket goalPocket)
+        /// <summary>
+        /// 取得母球-假母球與假母球-球袋兩線之間的夾角。
+        /// </summary>
+        /// <param name="cueBall">母球。</param>
+        /// <param name="ghostCueBallPosition">假母球位置。</param>
+        /// <param name="pocket">球袋。</param>
+        /// <returns>夾角。</returns>
+        public static double GetAngle(Ball cueBall, PointF ghostCueBallPosition, Pocket pocket)
         {
-            var mL1 = GetSlope(ghostCueBallPosition, goalPocket.Position);
-            var mL2 = GetSlope(cueBall.Position, ghostCueBallPosition);
+            return GetAngle(cueBall.Position, ghostCueBallPosition, pocket.Position);
+        }
+
+        /// <summary>
+        /// 取得母球-假母球與假母球-球袋兩線之間的夾角。
+        /// </summary>
+        /// <param name="cueBallPosition">母球位置。</param>
+        /// <param name="ghostCueBallPosition">假母球位置。</param>
+        /// <param name="pocketPosition">球袋位置。</param>
+        /// <returns>夾角。</returns>
+        public static double GetAngle(PointF cueBallPosition, PointF ghostCueBallPosition, PointF pocketPosition)
+        {
+            var mL1 = GetSlope(ghostCueBallPosition, pocketPosition);
+            var mL2 = GetSlope(cueBallPosition, ghostCueBallPosition);
             var angle = ConvertRadToDegree(GetAngleBetweenTwoLine(mL1, mL2));
             return angle;
         }
 
+        /// <summary>
+        /// 判斷是否爲可行的路徑。
+        /// </summary>
+        /// <param name="cueBall">母球。</param>
+        /// <param name="ghostCueBallPosition">假母球位置。</param>
+        /// <param name="pocket">球袋。</param>
+        /// <returns>是否可行。</returns>
+        public static bool IsPossiblePath(Ball cueBall, PointF ghostCueBallPosition, Pocket pocket)
+        {
+            return IsPossiblePath(cueBall.Position, ghostCueBallPosition, pocket.Position);
+        }
+
         // TODO
-        public static bool IsPossibleGhostCueBallPosition(Ball cueBall, PointF ghostCueBallPosition, Pocket goalPocket)
+        /// <summary>
+        /// 判斷是否爲可行的路徑。
+        /// </summary>
+        /// <param name="cueBallPosition">母球位置。</param>
+        /// <param name="ghostCueBallPosition">假母球位置。</param>
+        /// <param name="pocketPosition">球袋位置。</param>
+        /// <returns>是否可行。</returns>
+        public static bool IsPossiblePath(PointF cueBallPosition, PointF ghostCueBallPosition, PointF pocketPosition)
         {
             var isPossible = false;
 
-            var mL1 = GetSlope(ghostCueBallPosition, goalPocket.Position);
-            var mL2 = GetSlope(cueBall.Position, ghostCueBallPosition);
+            var mL1 = GetSlope(ghostCueBallPosition, pocketPosition);
+            var mL2 = GetSlope(cueBallPosition, ghostCueBallPosition);
             var angle = ConvertRadToDegree(GetAngleBetweenTwoLine(mL1, mL2));
 
-            if (cueBall.Position.X > ghostCueBallPosition.X)
+            if (cueBallPosition.X > ghostCueBallPosition.X)
             {
                 angle = 180 - angle;
             }
