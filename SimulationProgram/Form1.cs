@@ -53,12 +53,12 @@ namespace SimulationProgram
                 new Ball(BallType.NumberedBall, objBallPosition), new Pocket(PocketType.Side, pocketPosition));
 
             // 計算夾角。
-            var angle = CollisionPathPlanningHandler.GetAttackAngle(
+            var angle = CollisionPathPlanningHandler.GetAngle(
                 new Ball(BallType.CueBall, cueBallPosition), ghostPosition, new Pocket(PocketType.Side, pocketPosition));
             labelAttackAngle.Text = angle.ToString();
 
             // 判斷路徑是否可行。
-            var isPassible = CollisionPathPlanningHandler.IsPossibleGhostCueBallPosition(
+            var isPassible = CollisionPathPlanningHandler.IsPossiblePath(
                 new Ball(BallType.CueBall, cueBallPosition), ghostPosition, new Pocket(PocketType.Side, pocketPosition));
 
             if (!isPassible)

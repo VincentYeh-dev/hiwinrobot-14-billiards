@@ -17,6 +17,7 @@ namespace ExclusiveProgram
         /// </summary>
         private static readonly double _ballRadius = (37.85 / 2);
 
+        // TODO
         public static bool Calculate(List<Ball> allTheBalls, Ball objectBall, Pocket pocket)
         {
             var isLegalPath = false;
@@ -56,7 +57,14 @@ namespace ExclusiveProgram
             return position;
         }
 
-        public static double GetAttackAngle(Ball cueBall, PointF ghostCueBallPosition, Pocket goalPocket)
+        /// <summary>
+        /// 取得母球-假母球與假母球-球袋兩線之間的夾角。
+        /// </summary>
+        /// <param name="cueBall">母球。</param>
+        /// <param name="ghostCueBallPosition">假母球位置。</param>
+        /// <param name="goalPocket">目標球袋。</param>
+        /// <returns>夾角。</returns>
+        public static double GetAngle(Ball cueBall, PointF ghostCueBallPosition, Pocket goalPocket)
         {
             var mL1 = GetSlope(ghostCueBallPosition, goalPocket.Position);
             var mL2 = GetSlope(cueBall.Position, ghostCueBallPosition);
@@ -65,7 +73,14 @@ namespace ExclusiveProgram
         }
 
         // TODO
-        public static bool IsPossibleGhostCueBallPosition(Ball cueBall, PointF ghostCueBallPosition, Pocket goalPocket)
+        /// <summary>
+        /// 判斷是否爲可行的路徑。
+        /// </summary>
+        /// <param name="cueBall">母球。</param>
+        /// <param name="ghostCueBallPosition">假母球位置。</param>
+        /// <param name="goalPocket">目標球袋。</param>
+        /// <returns>是否可行。</returns>
+        public static bool IsPossiblePath(Ball cueBall, PointF ghostCueBallPosition, Pocket goalPocket)
         {
             var isPossible = false;
 
