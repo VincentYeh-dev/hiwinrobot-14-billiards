@@ -49,17 +49,14 @@ namespace SimulationProgram
             img.Draw(objBall, new Bgr(055, 055, 255), _ballThickness);
 
             // 計算假母球位置。
-            var ghostPosition = CollisionPathPlanningHandler.GetGhostCueBallPosition(
-                new Ball(BallType.NumberedBall, objBallPosition), new Pocket(PocketType.Side, pocketPosition));
+            var ghostPosition = CollisionPathPlanningHandler.GetGhostCueBallPosition(objBallPosition, pocketPosition);
 
             // 計算夾角。
-            var angle = CollisionPathPlanningHandler.GetAngle(
-                new Ball(BallType.CueBall, cueBallPosition), ghostPosition, new Pocket(PocketType.Side, pocketPosition));
+            var angle = CollisionPathPlanningHandler.GetAngle(cueBallPosition, ghostPosition, pocketPosition);
             labelAttackAngle.Text = angle.ToString();
 
             // 判斷路徑是否可行。
-            var isPassible = CollisionPathPlanningHandler.IsPossiblePath(
-                new Ball(BallType.CueBall, cueBallPosition), ghostPosition, new Pocket(PocketType.Side, pocketPosition));
+            var isPassible = CollisionPathPlanningHandler.IsPossiblePath(cueBallPosition, ghostPosition, pocketPosition);
 
             if (!isPassible)
             {
