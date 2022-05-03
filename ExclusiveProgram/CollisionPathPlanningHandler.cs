@@ -92,9 +92,8 @@ namespace ExclusiveProgram
         /// <returns>夾角。</returns>
         public static double GetAngle(PointF cueBallPosition, PointF ghostCueBallPosition, PointF pocketPosition)
         {
-            var mL1 = GetSlope(ghostCueBallPosition, pocketPosition);
-            var mL2 = GetSlope(cueBallPosition, ghostCueBallPosition);
-            var angle = ConvertRadToDegree(GetAngleBetweenTwoLine(mL1, mL2));
+            // Pocket, GhostCue, Cue, GhostCue.
+            var angle = GetAngleBetweenTwoLine(pocketPosition, ghostCueBallPosition, cueBallPosition, ghostCueBallPosition);
             return angle;
         }
 
@@ -122,14 +121,8 @@ namespace ExclusiveProgram
         {
             var isPossible = false;
 
-            var mL1 = GetSlope(ghostCueBallPosition, pocketPosition);
-            var mL2 = GetSlope(cueBallPosition, ghostCueBallPosition);
-            var angle = ConvertRadToDegree(GetAngleBetweenTwoLine(mL1, mL2));
-
-            if (cueBallPosition.X > ghostCueBallPosition.X)
-            {
-                angle = 180 - angle;
-            }
+            // Pocket, GhostCue, Cue, GhostCue.
+            var angle = GetAngleBetweenTwoLine(pocketPosition, ghostCueBallPosition, cueBallPosition, ghostCueBallPosition);
 
             if (Math.Abs(angle) >= 90)
             {
@@ -224,11 +217,54 @@ namespace ExclusiveProgram
             return Math.Sin(angle) * hypotenuse;
         }
 
-        private static double GetAngleBetweenTwoLine(double slopA, double slopB)
+        private static double GetAngleBetweenTwoLine(PointF a1, PointF a2, PointF b1, PointF b2)
         {
-            var angleA = ConvertSlopToAngle((double)slopA);
-            var angleB = ConvertSlopToAngle((double)slopB);
-            var angle = angleB - angleA;
+            // 算斜率。
+            var mA = (a2.Y - a1.Y) / (a2.X - a1.X);
+            var mB = (b2.Y - b1.Y) / (b2.X - b1.X);
+
+            var angleA = ConvertSlopToAngle(mA);
+            var angleB = ConvertSlopToAngle(mB);
+
+            angleA = ConvertRadToDegree(angleA);
+            angleB = ConvertRadToDegree(angleB);
+
+            double angle;
+            if (mA > 0)
+            {
+                angle = angleB - angleA;
+
+                if (b1.X > b2.X)
+                {
+                    angle = 180 + angle;
+                }
+
+                if (b1.X > b2.X && b1.Y > b2.Y)
+                {
+                    if (mB > mA)
+                    {
+                        angle -= 360;
+                    }
+                }
+            }
+            else
+            {
+                angle = angleA - angleB;
+
+                if (b1.X < b2.X)
+                {
+                    angle = 180 + angle;
+                }
+
+                if (b1.X < b2.X && b1.Y > b2.Y)
+                {
+                    if (mB < mA)
+                    {
+                        angle -= 360;
+                    }
+                }
+            }
+
             return angle;
         }
 
