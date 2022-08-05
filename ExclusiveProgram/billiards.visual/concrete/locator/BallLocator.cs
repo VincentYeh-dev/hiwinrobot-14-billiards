@@ -55,8 +55,6 @@ namespace ExclusiveProgram.puzzle.visual.concrete
                 result.Coordinate = circle.Center;
                 result.Radius= circle.Radius;
 
-                circle.
-
                 CvInvoke.Circle(preprocessImage, Point.Round(circle.Center), (int)circle.Radius, new MCvScalar(0, 0, 255),3);
             }
             preprocessImage.Save("results/circles.jpg");
