@@ -19,9 +19,6 @@ namespace ExclusiveProgram
         [STAThread]
         static void Main()
         {
-            var locator=new BallLocator(new Size(),new Size(),null,new GreenBackgroundGrayConversionImpl(0.4),null,null);
-            locator.Locate(CvInvoke.Imread("Test.jpg").ToImage<Bgr, byte>());
-            return;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm.MainForm(new Control()));
