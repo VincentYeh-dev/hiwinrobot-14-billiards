@@ -43,31 +43,96 @@ namespace SimulationProgram
             var cueBall = new CircleF(cueBallPosition, _ballRadius);
             img.Draw(cueBall, new Bgr(255, 255, 255), _ballThickness);
 
-            // 畫目標球。
+            ////////////////////// 畫目標球。////////////////////////////////
+
             var objBallPosition = GetObjBallPosition();
             var objBall = new CircleF(objBallPosition, _ballRadius);
             img.Draw(objBall, new Bgr(055, 055, 255), _ballThickness);
 
+            var objBallPosition2 = GetObjBallPosition2();
+            var objBall2 = new CircleF(objBallPosition2, _ballRadius);
+            img.Draw(objBall2, new Bgr(055, 155, 255), _ballThickness);
+
+            var objBallPosition3 = GetObjBallPosition3();
+            var objBall3 = new CircleF(objBallPosition3, _ballRadius);
+            img.Draw(objBall3, new Bgr(055, 255, 255), _ballThickness);
+
+            var objBallPosition4 = GetObjBallPosition4();
+            var objBall4 = new CircleF(objBallPosition4, _ballRadius);
+            img.Draw(objBall4, new Bgr(055, 255, 155), _ballThickness);
+
+            /////////////////////////////////////////////////////////////////
             // 計算假母球位置。
             var ghostPosition = CollisionPathPlanningHandler.GetGhostCueBallPosition(objBallPosition, pocketPosition);
 
             // 計算夾角。
             var angle = CollisionPathPlanningHandler.GetAngle(cueBallPosition, ghostPosition, pocketPosition);
             labelAttackAngle.Text = angle.ToString();
+            //計算距離
+            var D_co = CollisionPathPlanningHandler.Distance(cueBallPosition, objBallPosition);
+            labelDistance_co.Text = D_co.ToString();
+            var D_op = CollisionPathPlanningHandler.Distance(objBallPosition, pocketPosition);
+            labelDistance_op.Text = D_op.ToString();
+            //路徑評分
+            var Score = CollisionPathPlanningHandler.Score(objBallPosition, objBallPosition2, objBallPosition3, objBallPosition4, cueBallPosition, pocketPosition, ghostPosition);
+            labelScore.Text = Score.ToString();
 
             // 判斷路徑是否可行。
-            var isPassible = CollisionPathPlanningHandler.IsPossiblePath(cueBallPosition, ghostPosition, pocketPosition);
-
+            var isPassible = CollisionPathPlanningHandler.IsPossiblePath(cueBallPosition, ghostPosition, pocketPosition, objBallPosition2);
             if (!isPassible)
             {
                 // 若路徑不可行，畫十字。
                 var ghostCross = new Cross2DF(ghostPosition, _ballRadius, _ballRadius);
                 img.Draw(ghostCross, new Bgr(0, 0, 255), 2);
             }
+            //////////號碼球234////////////
+            var isPassible_pg = CollisionPathPlanningHandler.IsPossiblePath_pg(cueBallPosition, ghostPosition, pocketPosition, objBallPosition2);
+            if (!isPassible_pg)
+            {
+                var ghostCross = new Cross2DF(ghostPosition, _ballRadius, _ballRadius);
+                img.Draw(ghostCross, new Bgr(0, 0, 255), 2);
+            }
 
+            var isPassible_gc = CollisionPathPlanningHandler.IsPossiblePath_gc(cueBallPosition, ghostPosition, pocketPosition, objBallPosition2);
+            if (!isPassible_gc)
+            {
+                var ghostCross = new Cross2DF(ghostPosition, _ballRadius, _ballRadius);
+                img.Draw(ghostCross, new Bgr(0, 0, 255), 2);
+            }
+
+            var isPassible_pg2 = CollisionPathPlanningHandler.IsPossiblePath_pg(cueBallPosition, ghostPosition, pocketPosition, objBallPosition3);
+            if (!isPassible_pg2)
+            {
+                var ghostCross = new Cross2DF(ghostPosition, _ballRadius, _ballRadius);
+                img.Draw(ghostCross, new Bgr(0, 0, 255), 2);
+            }
+
+            var isPassible_gc2 = CollisionPathPlanningHandler.IsPossiblePath_gc(cueBallPosition, ghostPosition, pocketPosition, objBallPosition3);
+            if (!isPassible_gc2)
+            {
+                var ghostCross = new Cross2DF(ghostPosition, _ballRadius, _ballRadius);
+                img.Draw(ghostCross, new Bgr(0, 0, 255), 2);
+            }
+
+            var isPassible_pg3 = CollisionPathPlanningHandler.IsPossiblePath_pg(cueBallPosition, ghostPosition, pocketPosition, objBallPosition4);
+            if (!isPassible_pg3)
+            {
+                var ghostCross = new Cross2DF(ghostPosition, _ballRadius, _ballRadius);
+                img.Draw(ghostCross, new Bgr(0, 0, 255), 2);
+            }
+
+            var isPassible_gc3 = CollisionPathPlanningHandler.IsPossiblePath_gc(cueBallPosition, ghostPosition, pocketPosition, objBallPosition4);
+            if (!isPassible_gc3)
+            {
+                var ghostCross = new Cross2DF(ghostPosition, _ballRadius, _ballRadius);
+                img.Draw(ghostCross, new Bgr(0, 0, 255), 2);
+            }
+            /////////////////////////////////
             // 畫假母球。
             var ghostBall = new CircleF(ghostPosition, _ballRadius);
             img.Draw(ghostBall, new Bgr(055, 055, 055), _ballThickness);
+
+            //////////////////////////////////////////////////////////////////////////////
 
             // 畫球袋到假母球的線。
             var l1 = new LineSegment2DF(pocketPosition, ghostPosition);
@@ -78,6 +143,9 @@ namespace SimulationProgram
             img.Draw(l2, new Bgr(5, 5, 155), 1);
 
             pictureBoxMain.Image = img.ToBitmap();
+            //////////////////////////////////////////////////////////////////////////////
+            
+            
         }
 
         private PointF GetPocketPosition()
@@ -117,12 +185,27 @@ namespace SimulationProgram
         {
             return new PointF((float)numericUpDownCueBallX.Value, (float)numericUpDownCueBallY.Value);
         }
-
+        ///////////目標球位置。////////////////////////////////////////////////////////////////////
         private PointF GetObjBallPosition()
         {
             return new PointF((float)numericUpDownObjBallX.Value, (float)numericUpDownObjBallY.Value);
         }
 
+        private PointF GetObjBallPosition2()
+        {
+            return new PointF((float)numericUpDownObjBallX2.Value, (float)numericUpDownObjBallY2.Value);
+        }
+
+        private PointF GetObjBallPosition3()
+        {
+            return new PointF((float)numericUpDownObjBallX3.Value, (float)numericUpDownObjBallY3.Value);
+        }
+
+        private PointF GetObjBallPosition4()
+        {
+            return new PointF((float)numericUpDownObjBallX4.Value, (float)numericUpDownObjBallY4.Value);
+        }
+        /////////////////////////////////////////////////////////////////////////////////////
         private void numericUpDownCueBallX_ValueChanged(object sender, EventArgs e)
         {
             UpdateImage();
@@ -132,7 +215,7 @@ namespace SimulationProgram
         {
             UpdateImage();
         }
-
+        /////////////目標球XY。///////////////////////////////////////////////////////////////////////
         private void numericUpDownObjBallX_ValueChanged(object sender, EventArgs e)
         {
             UpdateImage();
@@ -143,6 +226,36 @@ namespace SimulationProgram
             UpdateImage();
         }
 
+        private void numericUpDownObjBallX2_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+
+        private void numericUpDownObjBallY2_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+
+        private void numericUpDownObjBallX3_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+
+        private void numericUpDownObjBallY3_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+
+        private void numericUpDownObjBallX4_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+
+        private void numericUpDownObjBallY4_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateImage();
+        }
+        //////////////////////////////////////////////////////////////////////////////////////
         private void pictureBoxMain_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateBallPositionByMouse(e);
@@ -166,11 +279,30 @@ namespace SimulationProgram
                 numericUpDownCueBallX.Value = mousePosition.X;
                 numericUpDownCueBallY.Value = mousePosition.Y;
             }
+            //////////目標球XY位置。//////////////////////////////////////////////////////////
             else if (radioButtonObjBall.Checked)
             {
                 numericUpDownObjBallX.Value = mousePosition.X;
                 numericUpDownObjBallY.Value = mousePosition.Y;
             }
+            else if (radioButtonObjBall2.Checked)
+            {
+                numericUpDownObjBallX2.Value = mousePosition.X;
+                numericUpDownObjBallY2.Value = mousePosition.Y;
+            }
+
+            else if (radioButtonObjBall3.Checked)
+            {
+                numericUpDownObjBallX3.Value = mousePosition.X;
+                numericUpDownObjBallY3.Value = mousePosition.Y;
+            }
+
+            else if (radioButtonObjBall4.Checked)
+            {
+                numericUpDownObjBallX4.Value = mousePosition.X;
+                numericUpDownObjBallY4.Value = mousePosition.Y;
+            }
+            /////////////////////////////////////////////////////////////////////
             UpdateImage();
         }
     }
