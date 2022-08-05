@@ -124,6 +124,7 @@ namespace ExclusiveProgram
             // Pocket, GhostCue, Cue, GhostCue.
             var angle = GetAngleBetweenTwoLine(pocketPosition, ghostCueBallPosition, cueBallPosition, ghostCueBallPosition);
 
+
             if (pocketPosition.Y == 0)
             {
                 if (Math.Abs(angle) <= 95)
