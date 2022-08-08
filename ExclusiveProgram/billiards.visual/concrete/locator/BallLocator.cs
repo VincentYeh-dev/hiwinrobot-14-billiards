@@ -48,7 +48,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
                 binaryPreprocessImpl.BinaryPreprocess(grayImage, grayImage);
 
             grayImage.Save("results/binary.jpg");
-            var circles=CvInvoke.HoughCircles(grayImage,HoughModes.Gradient,4,200,100,150,minRadius,maxRadius);
+            var circles=CvInvoke.HoughCircles(grayImage,HoughModes.Gradient,4,200,100,180,minRadius,maxRadius);
             List<LocationResult> location_results = new List<LocationResult>();
 
             for(int i=0;i<circles.Length;i++)
@@ -59,19 +59,12 @@ namespace ExclusiveProgram.puzzle.visual.concrete
                 result.Coordinate = circle.Center;
                 result.Radius= circle.Radius;
                 result.ROI = GetROI(result.Coordinate,result.Radius,rawImage);
-                result.ROI.Save($"{result.ID}.jpg");
-                result.BallMask=GetMask(result.Radius);
+                result.ROI.Save($"results/Ball_{result.ID}.jpg");
+                location_results.Add(result);
                 CvInvoke.Circle(preprocessImage, Point.Round(circle.Center), (int)circle.Radius, new MCvScalar(0, 0, 255),3);
             }
             preprocessImage.Save("results/circles.jpg");
             return location_results;
-        }
-
-        private Mat GetMask(float Radius)
-        {
-            var mask = new Mat((int)(Radius*2),(int)(Radius*2),DepthType.Cv8U,1);
-            CvInvoke.Circle(mask, new Point((int)Radius, (int)Radius), (int)Radius, new MCvScalar(255), -1);
-            return mask;
         }
 
         private Image<Bgr, byte> GetROI(PointF Coordinate,double Radius, Image<Bgr, byte> input)

@@ -17,8 +17,7 @@ namespace ExclusiveProgram.puzzle.visual.framework
         public PointF Coordinate;
         public Size Size;
         public Image<Bgr,byte> ROI;
-        public Mat BallMask;
-        internal float Radius;
+        public double Radius;
     }
 
     public interface ILocator

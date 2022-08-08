@@ -20,7 +20,7 @@ namespace ExclusiveProgram.puzzle.visual.framework
 
     public interface IRecognizer
     {
-        RecognizeResult Recognize(int id,Image<Bgr,byte> image);
+        RecognizeResult Recognize(int id, Image<Bgr, byte> image, double radius);
         void setListener(PuzzleRecognizerListener listener);
     }
 
