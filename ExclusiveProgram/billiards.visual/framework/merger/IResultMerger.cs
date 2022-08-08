@@ -10,6 +10,6 @@ namespace ExclusiveProgram.puzzle.visual.framework
 {
     public interface IResultMerger
     {
-        Ball merge(LocationResult locationResult,Image<Bgr,byte> correctedImage,RecognizeResult recognizeResult);
+        Ball2D merge(LocationResult locationResult,Image<Bgr,byte> correctedImage,RecognizeResult recognizeResult);
     }
 }

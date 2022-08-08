@@ -32,7 +32,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             cts = new CancellationTokenSource();
         }
 
-        public List<Ball> Execute(Image<Bgr, byte> input)
+        public List<Ball2D> Execute(Image<Bgr, byte> input)
         {
             List<LocationResult> dataList;
 
@@ -40,22 +40,17 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             if (listener != null)
                 listener.onLocated(dataList);
 
-            List<Ball> results = new List<Ball>();
+            List<Ball2D> results = new List<Ball2D>();
 
             List<Task> tasks = new List<Task>();
             foreach (LocationResult location in dataList)
             {
                 Task task = factory.StartNew(() =>
                 {
-                    try
-                    {
-                        var recognized_result = recognizer.Recognize(location.ID, location.ROI,location.Radius);
-                        if (listener != null)
-                            listener.onRecognized(recognized_result);
-                        results.Add(merger.merge(location, location.ROI, recognized_result));
-                    }
-                    catch (Exception e) { 
-                    }
+                    var recognized_result = recognizer.Recognize(location.ID, location.ROI,location.Radius);
+                    if (listener != null)
+                        listener.onRecognized(recognized_result);
+                    results.Add(merger.merge(location, location.ROI, recognized_result));
 
                 }, cts.Token);
                 task.Wait();

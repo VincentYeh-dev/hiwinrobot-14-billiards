@@ -18,7 +18,7 @@ namespace ExclusiveProgram
         private static readonly double _ballRadius = (37.85 / 2);
 
         // TODO
-        public static bool Calculate(List<Ball> allTheBalls, Ball objectBall, Pocket pocket)
+        public static bool Calculate(List<Ball2D> allTheBalls, Ball2D objectBall, Pocket pocket)
         {
             var isLegalPath = false;
             var cueBall = FindCueBall(allTheBalls);
@@ -34,9 +34,9 @@ namespace ExclusiveProgram
         /// <param name="objectBall">目標球。</param>
         /// <param name="goalPocket">球袋。</param>
         /// <returns>假母球的位置。</returns>
-        public static PointF GetGhostCueBallPosition(Ball objectBall, Pocket goalPocket)
+        public static PointF GetGhostCueBallPosition(Ball2D objectBall, Pocket goalPocket)
         {
-            return GetGhostCueBallPosition(objectBall.Position, goalPocket.Position);
+            return GetGhostCueBallPosition(objectBall.Coordinate, goalPocket.Position);
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace ExclusiveProgram
         /// <param name="ghostCueBallPosition">假母球位置。</param>
         /// <param name="pocket">球袋。</param>
         /// <returns>夾角。</returns>
-        public static double GetAngle(Ball cueBall, PointF ghostCueBallPosition, Pocket pocket)
+        public static double GetAngle(Ball2D cueBall, PointF ghostCueBallPosition, Pocket pocket)
         {
-            return GetAngle(cueBall.Position, ghostCueBallPosition, pocket.Position);
+            return GetAngle(cueBall.Coordinate, ghostCueBallPosition, pocket.Position);
         }
 
         /// <summary>
@@ -104,9 +104,9 @@ namespace ExclusiveProgram
         /// <param name="ghostCueBallPosition">假母球位置。</param>
         /// <param name="pocket">球袋。</param>
         /// <returns>是否可行。</returns>
-        public static bool IsPossiblePath(Ball cueBall, PointF ghostCueBallPosition, Pocket pocket)
+        public static bool IsPossiblePath(Ball2D cueBall, PointF ghostCueBallPosition, Pocket pocket)
         {
-            return IsPossiblePath(cueBall.Position, ghostCueBallPosition, pocket.Position);
+            return IsPossiblePath(cueBall.Coordinate, ghostCueBallPosition, pocket.Position);
         }
 
         // TODO
@@ -136,7 +136,7 @@ namespace ExclusiveProgram
             return isPossible;
         }
 
-        private static Ball FindCueBall(List<Ball> balls)
+        private static Ball2D FindCueBall(List<Ball2D> balls)
         {
             foreach (var b in balls)
             {
@@ -154,9 +154,9 @@ namespace ExclusiveProgram
         /// <param name="cueBall">母球。</param>
         /// <param name="ghostCueBallPosition">假母球位置。</param>
         /// <returns>夾角。</returns>
-        private static double GetGhostCueBallAngle(Ball cueBall, PointF ghostCueBallPosition)
+        private static double GetGhostCueBallAngle(Ball2D cueBall, PointF ghostCueBallPosition)
         {
-            var m = GetSlope(cueBall.Position, ghostCueBallPosition);
+            var m = GetSlope(cueBall.Coordinate, ghostCueBallPosition);
             return ConvertSlopToAngle(m);
         }
 

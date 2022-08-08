@@ -33,7 +33,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
         public List<LocationResult> Locate(Image<Bgr, byte> rawImage)
         {
             var preprocessImage = rawImage.Clone();
-            CvInvoke.MedianBlur(preprocessImage, preprocessImage, 9);
+            //CvInvoke.MedianBlur(preprocessImage, preprocessImage, 9);
 
             if (preProcessImpl != null)
                 preProcessImpl.Preprocess(preprocessImage, preprocessImage);
@@ -48,7 +48,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
                 binaryPreprocessImpl.BinaryPreprocess(grayImage, grayImage);
 
             grayImage.Save("results/binary.jpg");
-            var circles=CvInvoke.HoughCircles(grayImage,HoughModes.Gradient,4,200,100,180,minRadius,maxRadius);
+            var circles=CvInvoke.HoughCircles(grayImage,HoughModes.Gradient,4,40,100,120,minRadius,maxRadius);
             List<LocationResult> location_results = new List<LocationResult>();
 
             for(int i=0;i<circles.Length;i++)

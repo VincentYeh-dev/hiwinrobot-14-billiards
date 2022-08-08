@@ -15,10 +15,10 @@ namespace ExclusiveProgram.puzzle.visual.concrete
         {
         }
 
-        public Ball merge(LocationResult locationResult, Image<Bgr, byte> correctedImage, RecognizeResult recognizeResult)
+        public Ball2D merge(LocationResult locationResult, Image<Bgr, byte> correctedImage, RecognizeResult recognizeResult)
         {
 
-            return new Ball(BallType.CueBall,new System.Drawing.PointF()); 
+            return new Ball2D(locationResult.ID,recognizeResult.Type,locationResult.Coordinate,locationResult.Radius); 
         }
     }
 }

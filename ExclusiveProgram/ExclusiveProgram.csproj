@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Ball.cs" />
     <Compile Include="billiards.visual\concrete\utils\DilateErodeBinaryPreprocessImpl.cs" />
+    <Compile Include="billiards.visual\concrete\utils\SubtractGrayConversionImpl.cs" />
     <Compile Include="billiards.visual\concrete\utils\WeightGrayConversionImpl.cs" />
     <Compile Include="VisualSystem.cs" />
     <Compile Include="CollisionPathPlanningHandler.cs" />

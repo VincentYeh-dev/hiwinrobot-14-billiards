@@ -18,7 +18,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
     }
     public interface IBallFactory
     {
-        List<Ball> Execute(Image<Bgr, byte> input);
+        List<Ball2D> Execute(Image<Bgr, byte> input);
         void setListener(PuzzleFactoryListener listener);
     }
 }

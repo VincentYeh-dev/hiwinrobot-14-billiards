@@ -60,16 +60,20 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             var upperWhite = new MCvScalar(255, 128, 255);
             var whiteImage= new Image<Gray, byte>(ballImage.Size);
             CvInvoke.InRange(hsv,new ScalarArray(lowerWhite), new ScalarArray(upperWhite), whiteImage);
-            whiteImage.Save($"results\\white_{id}.jpg");
-            return whiteImage.CountNonzero()[0];
+            var whiteArea = whiteImage.CountNonzero()[0];
+
+            var preview_image = whiteImage.Clone();
+            preview_image.Save($"results\\white_{id}.jpg");
+
+            return whiteArea;
         }
 
         private Image<Bgr,byte> GetMaskBall(double Radius,Image<Bgr,byte> image)
         {
-            Image<Bgr, byte> ballImage= new Image<Bgr, byte>(new Size((int)Radius*2,(int)Radius*2));
+            Image<Bgr, byte> ballImage= new Image<Bgr, byte>(image.Size);
 
             var mask = new Image<Gray,byte>(ballImage.Size);
-            CvInvoke.Circle(mask, new Point((int)Radius, (int)Radius), (int)Radius, new MCvScalar(255), -1);
+            CvInvoke.Circle(mask, new Point(image.Width/2,image.Height/2), (int)Radius, new MCvScalar(255), -1);
 
             image.Mat.CopyTo(ballImage, mask);
             return ballImage;
