@@ -13,11 +13,11 @@ namespace ExclusiveProgram.puzzle.visual.framework
 
     public struct LocationResult
     {
+        public int ID;
         public PointF Coordinate;
         public Size Size;
         public Image<Bgr,byte> ROI;
-        public Image<Gray,byte> BinaryROI;
-        public int ID;
+        public Mat BallMask;
         internal float Radius;
     }
 
