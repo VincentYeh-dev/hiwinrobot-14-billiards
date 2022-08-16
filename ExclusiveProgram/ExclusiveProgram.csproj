@@ -116,9 +116,13 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="uEyeDotNet">
+      <HintPath>\\robotnas\Public\PackageReferences_x64\uEyeDotNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ball.cs" />
+    <Compile Include="BilliardPlayer.cs" />
     <Compile Include="billiards.visual\concrete\utils\DilateErodeBinaryPreprocessImpl.cs" />
     <Compile Include="billiards.visual\concrete\utils\SubtractGrayConversionImpl.cs" />
     <Compile Include="billiards.visual\concrete\utils\WeightGrayConversionImpl.cs" />

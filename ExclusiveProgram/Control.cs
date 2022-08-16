@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Emgu.CV;
@@ -15,41 +17,115 @@ using RASDK.Arm;
 using RASDK.Basic;
 using RASDK.Basic.Message;
 using RASDK.Gripper;
+using RASDK.Vision.IDS;
 
 namespace ExclusiveProgram
 {
     public partial class Control : MainForm.ExclusiveControl
     {
+        private readonly int _serialPortBaudrate = 9600;
+        private ISerialPortDevice _serialPortDevice;
+        private BilliardPlayer _billiardPlayer;
+
         public Control()
         {
             InitializeComponent();
             Config = new Config();
         }
 
+        /// <summary>
+        /// 擊球。
+        /// </summary>
+        private void HitTheBall()
+        {
+            // 電磁鐵 ON.
+            _serialPortDevice.SerialPort.Write(new byte[] { 0x01 }, 0, 1);
+
+            // Delay in ms.
+            Thread.Sleep(1000);
+
+            // 電磁鐵 OFF.
+            _serialPortDevice.SerialPort.Write(new byte[] { 0x00 }, 0, 1);
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
+            DoOnce();
+        }
 
-            //var ss = new SubtractGrayConversionImpl();
-            var ss = new WeightGrayConversionImpl(green_weight: 0.2, blue_weight: 0.4, red_weight: 0.4);
-            var locator = new BallLocator(null,ss,
-                new NormalThresoldImpl(50),new DilateErodeBinaryPreprocessImpl(new Size(4,4)),55,100);
-            var recognizer = new BallRecognizer(null);
-            var factory = new DefaultBallFactory(locator, recognizer, new BallResultMerger(), 3);
-            var testImage = new Image<Bgr, byte>("Test6.jpg");
-
-            //var output= new Image<Gray, byte>(testImage.Size);
-            //ss.ConvertToGray(testImage,output);
-            //output.Save("results\\sub.jpg");
-            var preview_image= testImage.Clone();
-            List<Ball> balls= factory.Execute(testImage);
-            foreach(var ball in balls)
+        /// <summary>
+        /// 初始化。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonInit_Click(object sender, EventArgs e)
+        {
+            try
             {
-                CvInvoke.Circle(preview_image, Point.Round(ball.Position), (int)ball.Radius, new MCvScalar(0,0 , 255), 3);
-                var p = new Point((int)(ball.Position.X - ball.Radius),(int)(ball.Position.Y - ball.Radius)-20);
-                CvInvoke.PutText(preview_image,$"{ball.Type}",p,Emgu.CV.CvEnum.FontFace.HersheyPlain,3, new MCvScalar(0,0, 255));
-                Console.WriteLine($"ID:{ball.ID} -> {ball.Type}");
+                var camera = new IDSCamera(MessageHandler);
+                camera.Connect();
+                _billiardPlayer = new BilliardPlayer(Arm, camera, MessageHandler, pictureBoxMain, () => HitTheBall());
+
+                // Serial port.
+                var comPorts = SerialPort.GetPortNames();
+                var sp = new SerialPort(comPorts[0], _serialPortBaudrate, Parity.None, 8, StopBits.One);
+                sp.DataReceived += SerialPortDataReceivedHandler;
+                sp.Open();
+                _serialPortDevice = new SerialPortDevice(sp, MessageHandler);
+
+                buttonInit.Enabled = false;
             }
-            preview_image.Save("results\\result.jpg");
+            catch (Exception ex)
+            {
+                MessageHandler.Show(ex, LoggingLevel.Error);
+                buttonInit.Enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// 進行一次完整的擊球流程。
+        /// </summary>
+        private void DoOnce()
+        {
+            try
+            {
+                _billiardPlayer.FindThePath(checkBoxShowMessage.Checked);
+                _billiardPlayer.MoveAndHit(checkBoxShowMessage.Checked);
+            }
+            catch (Exception ex)
+            {
+                MessageHandler.Log(ex, LoggingLevel.Warn);
+                _billiardPlayer.Homing(checkBoxShowMessage.Checked);
+                return;
+            }
+
+            Thread.Sleep(1000);
+        }
+
+        /// <summary>
+        /// Serial port 接收指令事件。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SerialPortDataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        {
+            var sp = sender as SerialPort;
+            sp.DataReceived -= SerialPortDataReceivedHandler;
+
+            // Parse.
+            var indata = sp.ReadByte();
+            switch (indata)
+            {
+                case 0xF0: // A button pressed.
+                    DoOnce();
+                    break;
+
+                default:
+                    break;
+            }
+
+            sp.DiscardInBuffer(); // Cleay buffer.
+            sp.DataReceived += SerialPortDataReceivedHandler;
         }
     }
 }
