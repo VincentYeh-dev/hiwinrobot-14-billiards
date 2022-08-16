@@ -41,11 +41,11 @@ namespace ExclusiveProgram
             //ss.ConvertToGray(testImage,output);
             //output.Save("results\\sub.jpg");
             var preview_image= testImage.Clone();
-            List<Ball2D> balls= factory.Execute(testImage);
+            List<Ball> balls= factory.Execute(testImage);
             foreach(var ball in balls)
             {
-                CvInvoke.Circle(preview_image, Point.Round(ball.Coordinate), (int)ball.Radius, new MCvScalar(0,0 , 255), 3);
-                var p = new Point((int)(ball.Coordinate.X - ball.Radius),(int)(ball.Coordinate.Y - ball.Radius)-20);
+                CvInvoke.Circle(preview_image, Point.Round(ball.Position), (int)ball.Radius, new MCvScalar(0,0 , 255), 3);
+                var p = new Point((int)(ball.Position.X - ball.Radius),(int)(ball.Position.Y - ball.Radius)-20);
                 CvInvoke.PutText(preview_image,$"{ball.Type}",p,Emgu.CV.CvEnum.FontFace.HersheyPlain,3, new MCvScalar(0,0, 255));
                 Console.WriteLine($"ID:{ball.ID} -> {ball.Type}");
             }

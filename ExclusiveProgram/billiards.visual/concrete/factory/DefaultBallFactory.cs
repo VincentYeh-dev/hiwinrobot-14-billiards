@@ -32,7 +32,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             cts = new CancellationTokenSource();
         }
 
-        public List<Ball2D> Execute(Image<Bgr, byte> input)
+        public List<Ball> Execute(Image<Bgr, byte> input)
         {
             List<LocationResult> dataList;
 
@@ -40,7 +40,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             if (listener != null)
                 listener.onLocated(dataList);
 
-            List<Ball2D> results = new List<Ball2D>();
+            List<Ball> results = new List<Ball>();
 
             List<Task> tasks = new List<Task>();
             foreach (LocationResult location in dataList)
