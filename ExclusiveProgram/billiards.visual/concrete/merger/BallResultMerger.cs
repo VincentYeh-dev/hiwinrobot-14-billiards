@@ -18,7 +18,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
         public Ball merge(LocationResult locationResult, Image<Bgr, byte> correctedImage, RecognizeResult recognizeResult)
         {
 
-            return new Ball(BallType.CueBall,new System.Drawing.PointF()); 
+            return new Ball(locationResult.ID,recognizeResult.Type,locationResult.Coordinate,locationResult.Radius); 
         }
     }
 }

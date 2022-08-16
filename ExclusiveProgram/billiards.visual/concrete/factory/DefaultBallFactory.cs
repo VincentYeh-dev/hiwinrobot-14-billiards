@@ -47,7 +47,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             {
                 Task task = factory.StartNew(() =>
                 {
-                    var recognized_result = recognizer.Recognize(location.ID, location.ROI);
+                    var recognized_result = recognizer.Recognize(location.ID, location.ROI,location.Radius);
                     if (listener != null)
                         listener.onRecognized(recognized_result);
                     results.Add(merger.merge(location, location.ROI, recognized_result));
