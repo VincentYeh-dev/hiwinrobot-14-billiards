@@ -28,6 +28,9 @@ namespace ExclusiveProgram
     /// </summary>
     public class Ball
     {
+
+        public readonly int ID;
+        public readonly double Radius;
         /// <summary>
         /// 種類。
         /// </summary>
@@ -43,10 +46,12 @@ namespace ExclusiveProgram
         /// </summary>
         /// <param name="type">種類。</param>
         /// <param name="position">位置。</param>
-        public Ball(BallType type, PointF position)
+        public Ball(int id,BallType type, PointF position,double radius)
         {
+            this.ID = id;
             Type = type;
             Position = position;
+            Radius = radius;
         }
 
         /// <summary>
