@@ -14,19 +14,12 @@ namespace ExclusiveProgram.puzzle.visual.concrete
     public class BallRecognizer : IRecognizer
     {
 
-        private Image<Bgr, byte> preprocessModelImage = null;
         private readonly IPreprocessImpl puzzlePreProcessImpl;
-        //private readonly IGrayConversionImpl grayConversionImpl;
-        //private readonly IThresholdImpl thresholdImpl;
-        //private readonly IBinaryPreprocessImpl binaryPreprocessImpl;
 
 
         public BallRecognizer(IPreprocessImpl puzzlePreProcessImpl)
         {
             this.puzzlePreProcessImpl = puzzlePreProcessImpl;
-            //this.grayConversionImpl = grayConversionImpl;
-            //this.thresholdImpl = thresholdImpl;
-            //this.binaryPreprocessImpl = binaryPreprocessImpl;
         }
 
         public RecognizeResult Recognize(int id,Image<Bgr, byte> image,double radius)
