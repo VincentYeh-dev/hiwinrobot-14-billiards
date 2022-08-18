@@ -19,6 +19,7 @@ using RASDK.Basic;
 using RASDK.Basic.Message;
 using RASDK.Gripper;
 using RASDK.Vision.IDS;
+using System.Diagnostics;
 
 namespace ExclusiveProgram
 {
@@ -98,6 +99,8 @@ namespace ExclusiveProgram
         /// </summary>
         private void DoOnce()
         {
+            var sw = Stopwatch.StartNew();
+
             try
             {
                 _billiardPlayer.FindThePath(checkBoxShowMessage.Checked);
@@ -109,6 +112,10 @@ namespace ExclusiveProgram
                 _billiardPlayer.Homing(checkBoxShowMessage.Checked);
                 return;
             }
+
+            sw.Stop();
+            Console.WriteLine($"執行時間：{sw.Elapsed}");
+            MessageHandler.Log($"執行時間：{sw.Elapsed}", LoggingLevel.Info);
 
             Thread.Sleep(1000);
         }
@@ -137,6 +144,11 @@ namespace ExclusiveProgram
 
             sp.DiscardInBuffer(); // Cleay buffer.
             sp.DataReceived += SerialPortDataReceivedHandler;
+        }
+
+        private void buttonReady_Click(object sender, EventArgs e)
+        {
+            _billiardPlayer.Homing(false);
         }
     }
 }
