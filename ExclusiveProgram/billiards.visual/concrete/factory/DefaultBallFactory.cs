@@ -23,11 +23,8 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             this.locator = locator;
             this.merger = merger;
 
-            // Create a scheduler that uses two threads.
-            LimitedConcurrencyLevelTaskScheduler lcts = new LimitedConcurrencyLevelTaskScheduler(threadCount);
-
             // Create a TaskFactory and pass it our custom scheduler.
-            factory = new TaskFactory(lcts);
+            factory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(threadCount));
         }
 
         public List<Ball> Execute(Image<Bgr, byte> input)
