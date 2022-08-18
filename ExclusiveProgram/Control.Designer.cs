@@ -32,12 +32,13 @@
             this.buttonInit = new System.Windows.Forms.Button();
             this.pictureBoxMain = new System.Windows.Forms.PictureBox();
             this.checkBoxShowMessage = new System.Windows.Forms.CheckBox();
+            this.buttonReady = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(19, 68);
+            this.button1.Location = new System.Drawing.Point(26, 192);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(63, 37);
@@ -48,7 +49,7 @@
             // 
             // buttonInit
             // 
-            this.buttonInit.Location = new System.Drawing.Point(19, 23);
+            this.buttonInit.Location = new System.Drawing.Point(26, 66);
             this.buttonInit.Name = "buttonInit";
             this.buttonInit.Size = new System.Drawing.Size(63, 40);
             this.buttonInit.TabIndex = 1;
@@ -70,12 +71,23 @@
             this.checkBoxShowMessage.AutoSize = true;
             this.checkBoxShowMessage.Checked = true;
             this.checkBoxShowMessage.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowMessage.Location = new System.Drawing.Point(29, 170);
+            this.checkBoxShowMessage.Location = new System.Drawing.Point(26, 23);
             this.checkBoxShowMessage.Name = "checkBoxShowMessage";
             this.checkBoxShowMessage.Size = new System.Drawing.Size(113, 19);
             this.checkBoxShowMessage.TabIndex = 3;
             this.checkBoxShowMessage.Text = "Show Message";
             this.checkBoxShowMessage.UseVisualStyleBackColor = true;
+            // 
+            // buttonReady
+            // 
+            this.buttonReady.Location = new System.Drawing.Point(26, 129);
+            this.buttonReady.Margin = new System.Windows.Forms.Padding(2);
+            this.buttonReady.Name = "buttonReady";
+            this.buttonReady.Size = new System.Drawing.Size(63, 37);
+            this.buttonReady.TabIndex = 0;
+            this.buttonReady.Text = "Ready";
+            this.buttonReady.UseVisualStyleBackColor = true;
+            this.buttonReady.Click += new System.EventHandler(this.buttonReady_Click);
             // 
             // Control
             // 
@@ -84,6 +96,7 @@
             this.Controls.Add(this.checkBoxShowMessage);
             this.Controls.Add(this.pictureBoxMain);
             this.Controls.Add(this.buttonInit);
+            this.Controls.Add(this.buttonReady);
             this.Controls.Add(this.button1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Control";
@@ -100,5 +113,6 @@
         private System.Windows.Forms.Button buttonInit;
         private System.Windows.Forms.PictureBox pictureBoxMain;
         private System.Windows.Forms.CheckBox checkBoxShowMessage;
+        private System.Windows.Forms.Button buttonReady;
     }
 }
