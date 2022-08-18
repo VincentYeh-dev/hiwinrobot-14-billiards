@@ -26,13 +26,40 @@ namespace ExclusiveProgram
     public partial class Control : MainForm.ExclusiveControl
     {
         private readonly int _serialPortBaudrate = 9600;
+        private readonly List<Pocket> _pockets = new List<Pocket>();
+
+        private readonly List<MCvScalar> _pocketColors = new List<MCvScalar>
+        {
+            new MCvScalar(0,0,255),
+            new MCvScalar(0,120,235),
+            new MCvScalar(0,255,255),
+            new MCvScalar(0,255,0),
+            new MCvScalar(255,0,0),
+            new MCvScalar(255,0,255),
+        };
+
+        private IDSCamera _camera;
         private ISerialPortDevice _serialPortDevice;
         private BilliardPlayer _billiardPlayer;
+        private int _pocketRadius = 110;
+
+        private Image<Bgr, byte> _sourceImage;
 
         public Control()
         {
             InitializeComponent();
             Config = new Config();
+
+            _pockets = new List<Pocket>
+            {
+                new Pocket(new PointF(0,0),PocketType.Corner, 0),
+                new Pocket(new PointF(1500,0),PocketType.Side,1),
+                new Pocket(new PointF(3000,0),PocketType.Corner,2),
+
+                new Pocket(new PointF(0,2050),PocketType.Corner,3),
+                new Pocket(new PointF(1500,2050),PocketType.Side,4),
+                new Pocket(new PointF(3000,2050),PocketType.Corner,5),
+            };
 
             if (!Directory.Exists("results"))
             {
@@ -74,9 +101,9 @@ namespace ExclusiveProgram
         {
             try
             {
-                var camera = new IDSCamera(MessageHandler);
-                camera.Connect();
-                _billiardPlayer = new BilliardPlayer(Arm, camera, MessageHandler, pictureBoxMain, () => HitTheBall());
+                _camera = new IDSCamera(MessageHandler);
+                _camera.Connect();
+                _billiardPlayer = new BilliardPlayer(Arm, _camera, MessageHandler, pictureBoxMain, () => HitTheBall(), _pockets);
 
                 // Serial port.
                 var comPorts = SerialPort.GetPortNames();
@@ -150,5 +177,118 @@ namespace ExclusiveProgram
         {
             _billiardPlayer.Homing(false);
         }
+
+        private void buttonGetImage_Click(object sender, EventArgs e)
+        {
+            //var img = _camera.GetImage();
+            var img = new Image<Bgr, byte>("test_1.jpg");
+            pictureBoxMain.Image = img.ToBitmap();
+            //_sourceImage = img.ToImage<Bgr, byte>();
+            _sourceImage = img;
+
+            UpdatePocketImage();
+        }
+
+        #region Pocket
+
+        private int GetSelectPocketIndex()
+        {
+            int index = -1;
+            if (radioButtonPocket0.Checked)
+            { index = 0; }
+            else if (radioButtonPocket1.Checked)
+            { index = 1; }
+            else if (radioButtonPocket2.Checked)
+            { index = 2; }
+            else if (radioButtonPocket3.Checked)
+            { index = 3; }
+            else if (radioButtonPocket4.Checked)
+            { index = 4; }
+            else if (radioButtonPocket5.Checked)
+            { index = 5; }
+            return index;
+        }
+
+        private void UpdatePocketUI()
+        {
+            var index = GetSelectPocketIndex();
+            numericUpDownPocketX.Value = (decimal)_pockets[index].Position.X;
+            numericUpDownPocketY.Value = (decimal)_pockets[index].Position.Y;
+
+            UpdatePocketImage();
+        }
+
+        private void UpdatePocketImage()
+        {
+            if (_sourceImage == null)
+            {
+                return;
+            }
+
+            var srcImg = _sourceImage;
+            var disImg = srcImg.Clone();
+
+            foreach (var pocket in _pockets)
+            {
+                var color = _pocketColors[pocket.Id];
+                var p = Point.Round(pocket.Position);
+                CvInvoke.Circle(disImg, p, _pocketRadius, color, 5);
+
+                var cross = new Cross2DF(p, (float)(_pocketRadius * 0.7), (float)(_pocketRadius * 0.7));
+                disImg.Draw(cross, new Bgr(color.V0, color.V1, color.V2), 2);
+            }
+
+            pictureBoxMain.Image = disImg.ToBitmap();
+        }
+
+        #region Radio button
+
+        private void radioButtonPocket0_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePocketUI();
+        }
+
+        private void radioButtonPocket1_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePocketUI();
+        }
+
+        private void radioButtonPocket2_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePocketUI();
+        }
+
+        private void radioButtonPocket3_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePocketUI();
+        }
+
+        private void radioButtonPocket4_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePocketUI();
+        }
+
+        private void radioButtonPocket5_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdatePocketUI();
+        }
+
+        #endregion Radio button
+
+        private void numericUpDownPocketX_ValueChanged(object sender, EventArgs e)
+        {
+            var i = GetSelectPocketIndex();
+            _pockets[i].Position.X = (float)numericUpDownPocketX.Value;
+            UpdatePocketImage();
+        }
+
+        private void numericUpDownPocketY_ValueChanged(object sender, EventArgs e)
+        {
+            var i = GetSelectPocketIndex();
+            _pockets[i].Position.Y = (float)numericUpDownPocketY.Value;
+            UpdatePocketImage();
+        }
+
+        #endregion Pocket
     }
 }

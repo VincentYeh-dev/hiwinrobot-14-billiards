@@ -38,7 +38,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 位置。
         /// </summary>
-        public readonly PointF Position;
+        public PointF Position;
 
         /// <summary>
         /// 球袋。
