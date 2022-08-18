@@ -85,6 +85,7 @@ namespace ExclusiveProgram
             _hitTheBallFunc = hitTheBallFunc;
             _pockets = pockets;
 
+            _ballFactory = MakeBallFactory();
             _positioner = CCIA.LoadFromCsv("ccia_param.csv");
         }
 
@@ -107,7 +108,6 @@ namespace ExclusiveProgram
 
             // 影像辨識找球。
             var sw1 = Stopwatch.StartNew();
-            _ballFactory = MakeBallFactory();
             var balls = _ballFactory.Execute(image);
             sw1.Stop();
             _messageHandler.Log($"影像辨識找球耗時：{sw1.Elapsed}", LoggingLevel.Info);
