@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO.Ports;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -31,6 +32,16 @@ namespace ExclusiveProgram
         {
             InitializeComponent();
             Config = new Config();
+
+            if (!Directory.Exists("results"))
+            {
+                Directory.CreateDirectory("results");
+            }
+
+            if (!Directory.Exists("paths"))
+            {
+                Directory.CreateDirectory("paths");
+            }
         }
 
         /// <summary>
