@@ -53,7 +53,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 拍照的位置。笛卡爾座標。
         /// </summary>
-        private double[] _takePiecurePosition => new double[] { 0, 368, 294, 180, 0, 90 };
+        private double[] _takePiecurePosition => new double[] { 7.225,330.464,417.625, 180, 0, 90 };
 
         #endregion Position
 
@@ -85,7 +85,7 @@ namespace ExclusiveProgram
             _hitTheBallFunc = hitTheBallFunc;
             _pockets = pockets;
 
-            _positioner = CCIA.LoadFromCsv("ccia_param.csv");
+            _positioner = CCIA.LoadFromCsv("ccia.csv");
         }
 
         /// <summary>
@@ -218,8 +218,8 @@ namespace ExclusiveProgram
 
         private Image<Bgr, byte> TakeAPicture()
         {
-            return new Image<Bgr, byte>("test_2.jpg"); // 讀取檔案。
-            //return _camera.GetImage().ToImage<Bgr, byte>(); // 拍照。
+            //return new Image<Bgr, byte>("test_2.jpg"); // 讀取檔案。
+            return _camera.GetImage().ToImage<Bgr, byte>(); // 拍照。
         }
 
         private DefaultBallFactory MakeBallFactory()
@@ -227,7 +227,7 @@ namespace ExclusiveProgram
             var ss = new WeightGrayConversionImpl(green_weight: 0.2, blue_weight: 0.4, red_weight: 0.4);
             var locator = new BallLocator(null,
                                           ss,
-                                          new NormalThresoldImpl(50),
+                                          new NormalThresoldImpl(100),
                                           new DilateErodeBinaryPreprocessImpl(new Size(4, 4)),
                                           55,
                                           100);
