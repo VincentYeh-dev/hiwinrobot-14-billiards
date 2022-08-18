@@ -81,7 +81,7 @@ namespace ExclusiveProgram
             _serialPortDevice.SerialPort.Write(new byte[] { 0x01 }, 0, 1);
 
             // Delay in ms.
-            Thread.Sleep(1000);
+            Thread.Sleep(800);
 
             // 電磁鐵 OFF.
             _serialPortDevice.SerialPort.Write(new byte[] { 0x00 }, 0, 1);

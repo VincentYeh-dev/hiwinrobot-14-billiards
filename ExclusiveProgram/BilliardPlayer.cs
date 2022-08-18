@@ -96,9 +96,9 @@ namespace ExclusiveProgram
         public void FindThePath(bool saveAllPathImage = false)
         {
             // 到拍照的位置。
-            _arm.Speed = 25;
+            _arm.Speed = 80;
             _arm.MoveAbsolute(_standByPositionJoint1, new MotionParam { CoordinateType = CoordinateType.Joint });
-            _arm.Speed = 30;
+            _arm.Speed = 95;
             _arm.MoveAbsolute(_takePiecurePosition);
 
             // 拍照。
@@ -178,12 +178,12 @@ namespace ExclusiveProgram
             }
 
             // 到母球上方。
-            _arm.Speed = 30;
+            _arm.Speed = 95;
             position[2] = _zUpper;
             _arm.MoveAbsolute(position);
 
             // 下降。。
-            _arm.Speed = 10;
+            _arm.Speed = 50;
             position[2] = _zLower;
             _arm.MoveAbsolute(position, new MotionParam { MotionType = RASDK.Arm.Type.MotionType.Linear });
 
@@ -191,7 +191,7 @@ namespace ExclusiveProgram
             _hitTheBallFunc();
 
             // 回到母球上方。
-            _arm.Speed = 30;
+            _arm.Speed = 95;
             position[2] = _zUpper;
             _arm.MoveAbsolute(position, new MotionParam { MotionType = RASDK.Arm.Type.MotionType.Linear });
 
@@ -209,10 +209,10 @@ namespace ExclusiveProgram
                 MessageBox.Show("復歸");
             }
 
-            _arm.Speed = 30;
+            _arm.Speed = 95;
             _arm.MoveAbsolute(_standByPositionJoint1, new MotionParam { CoordinateType = CoordinateType.Joint });
 
-            _arm.Speed = 25;
+            _arm.Speed = 80;
             _arm.MoveAbsolute(_standByPositionJoint2, new MotionParam { CoordinateType = CoordinateType.Joint });
         }
 
