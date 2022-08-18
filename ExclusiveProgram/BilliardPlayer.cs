@@ -75,23 +75,14 @@ namespace ExclusiveProgram
         /// </summary>
         private double _cueBallAngle;
 
-        public BilliardPlayer(RoboticArm arm, IDSCamera camera, MessageHandler messageHandler, PictureBox pictureBox, Action hitTheBallFunc)
+        public BilliardPlayer(RoboticArm arm, IDSCamera camera, MessageHandler messageHandler, PictureBox pictureBox, Action hitTheBallFunc, List<Pocket> pockets)
         {
             _arm = arm;
             _camera = camera;
             _messageHandler = messageHandler;
             _pictureBox = pictureBox;
             _hitTheBallFunc = hitTheBallFunc;
-
-            _pockets = new List<Pocket>
-            {
-                new Pocket(new PointF(0,0),PocketType.Corner, 0),
-                new Pocket(new PointF(3000,0),PocketType.Corner,1),
-                new Pocket(new PointF(0,2050),PocketType.Corner,2),
-                new Pocket(new PointF(3000,2050),PocketType.Corner,3),
-                new Pocket(new PointF(1500,0),PocketType.Side,4),
-                new Pocket(new PointF(1500,2050),PocketType.Side,5),
-            };
+            _pockets = pockets;
 
             _positioner = CCIA.LoadFromCsv("ccia_param.csv");
         }
