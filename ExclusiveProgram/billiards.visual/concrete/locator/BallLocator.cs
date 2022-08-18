@@ -59,11 +59,11 @@ namespace ExclusiveProgram.puzzle.visual.concrete
                 result.Coordinate = circle.Center;
                 result.Radius= circle.Radius;
                 result.ROI = GetROI(result.Coordinate,result.Radius,rawImage);
-                result.ROI.Save($"results/Ball_{result.ID}.jpg");
+                //result.ROI.Save($"results/Ball_{result.ID}.jpg");
                 location_results.Add(result);
                 CvInvoke.Circle(preprocessImage, Point.Round(circle.Center), (int)circle.Radius, new MCvScalar(0, 0, 255),3);
             }
-            preprocessImage.Save("results/circles.jpg");
+            //preprocessImage.Save("results/circles.jpg");
             return location_results;
         }
 
