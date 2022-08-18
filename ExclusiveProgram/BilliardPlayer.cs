@@ -22,6 +22,7 @@ using MotionParam = RASDK.Arm.AdditionalMotionParameters;
 using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ExclusiveProgram
 {
@@ -105,10 +106,14 @@ namespace ExclusiveProgram
             var previewImage = image.Clone();
 
             // 影像辨識找球。
+            var sw1 = Stopwatch.StartNew();
             _ballFactory = MakeBallFactory();
             var balls = _ballFactory.Execute(image);
+            sw1.Stop();
+            _messageHandler.Log($"影像辨識找球耗時：{sw1.Elapsed}", LoggingLevel.Info);
             foreach (var ball in balls)
             {
+                // 畫上結果。
                 var color = new MCvScalar(0, 0, 0);
                 CvInvoke.Circle(previewImage, Point.Round(ball.Position), (int)ball.Radius, color, 3);
                 var point = new Point((int)(ball.Position.X - ball.Radius), (int)(ball.Position.Y - ball.Radius) - 20);
@@ -120,6 +125,7 @@ namespace ExclusiveProgram
             {
                 image = null;
             }
+            var sw2 = Stopwatch.StartNew();
             var score = CollisionPathPlanningHandler.FindMostPossiblePath(balls,
                                                                           _pockets,
                                                                           out var pocket,
@@ -128,6 +134,8 @@ namespace ExclusiveProgram
                                                                           out var ghostCueBallPosition,
                                                                           out var angleDeg,
                                                                           image);
+            sw2.Stop();
+            _messageHandler.Log($"尋找路徑耗時：{sw2.Elapsed}", LoggingLevel.Info);
             if (score < 0)
             {
                 throw new Exception("無任何可能的路徑。"); // 跳出。

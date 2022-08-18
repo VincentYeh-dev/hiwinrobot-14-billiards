@@ -126,6 +126,7 @@ namespace ExclusiveProgram
         /// </summary>
         private void DoOnce()
         {
+            MessageHandler.Log($"開始進行一次完整的擊球。", LoggingLevel.Info);
             var sw = Stopwatch.StartNew();
 
             try
@@ -141,8 +142,8 @@ namespace ExclusiveProgram
             }
 
             sw.Stop();
-            Console.WriteLine($"執行時間：{sw.Elapsed}");
-            MessageHandler.Log($"執行時間：{sw.Elapsed}", LoggingLevel.Info);
+            Console.WriteLine($"擊球總執行時間：{sw.Elapsed}");
+            MessageHandler.Log($"擊球總執行時間：{sw.Elapsed}", LoggingLevel.Info);
 
             Thread.Sleep(1000);
         }
