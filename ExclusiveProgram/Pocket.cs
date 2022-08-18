@@ -28,6 +28,8 @@ namespace ExclusiveProgram
     /// </summary>
     public class Pocket
     {
+        public readonly int Id;
+
         /// <summary>
         /// 種類。
         /// </summary>
@@ -43,10 +45,11 @@ namespace ExclusiveProgram
         /// </summary>
         /// <param name="type">種類。</param>
         /// <param name="position">位置。</param>
-        public Pocket(PocketType type, PointF position)
+        public Pocket(PointF position, PocketType type, int id)
         {
             Type = type;
             Position = position;
+            Id = id;
         }
     }
 }

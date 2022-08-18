@@ -4,6 +4,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Emgu.CV;
+using Emgu.CV.Util;
+using Emgu.CV.CvEnum;
+using Emgu.CV.Structure;
 
 namespace ExclusiveProgram
 {
@@ -13,9 +17,9 @@ namespace ExclusiveProgram
     public class CollisionPathPlanningHandler
     {
         /// <summary>
-        /// 球的半徑（單位：mm）。
+        /// 球的半徑。
         /// </summary>
-        private static readonly double _ballRadius = (37.85 / 2);
+        private static readonly double _ballRadius = 87.0;
 
         // TODO
         public static bool Calculate(List<Ball> allTheBalls, Ball objectBall, Pocket pocket)
@@ -97,35 +101,152 @@ namespace ExclusiveProgram
             return angle;
         }
 
-        /// <summary>
-        /// 判斷是否爲可行的路徑。
-        /// </summary>
-        /// <param name="cueBall">母球。</param>
-        /// <param name="ghostCueBallPosition">假母球位置。</param>
-        /// <param name="pocket">球袋。</param>
-        /// <returns>是否可行。</returns>
-        public static bool IsPossiblePath(Ball cueBall, PointF ghostCueBallPosition, Pocket pocket, Ball objectBall2)
+        public static Image<Bgr, byte> Drawing(Image<Bgr, byte> image, Ball objectBall, Ball cueBall, PointF ghostCueBallPosition, Pocket pocket)
         {
-            return IsPossiblePath(cueBall.Position, ghostCueBallPosition, pocket.Position, objectBall2.Position);
+            var previewImage = image.Clone();
+
+            CvInvoke.Circle(previewImage, Point.Round(ghostCueBallPosition), (int)cueBall.Radius, new MCvScalar(255, 255, 255), 5);
+            CvInvoke.Circle(previewImage, Point.Round(pocket.Position), (int)cueBall.Radius * 2, new MCvScalar(0, 0, 0), 10);
+            CvInvoke.Circle(previewImage, Point.Round(cueBall.Position), (int)cueBall.Radius, new MCvScalar(0, 110, 255), 8);
+            CvInvoke.Circle(previewImage, Point.Round(objectBall.Position), (int)objectBall.Radius, new MCvScalar(10, 10, 255), 8);
+            CvInvoke.Line(previewImage, Point.Round(cueBall.Position), Point.Round(ghostCueBallPosition), new MCvScalar(0, 0, 255), 3);
+            CvInvoke.Line(previewImage, Point.Round(objectBall.Position), Point.Round(pocket.Position), new MCvScalar(220, 220, 220), 3);
+
+            return previewImage;
         }
 
-        // TODO
+        public static double FindMostPossiblePath(List<Ball> allTheBalls,
+                                                  List<Pocket> pockets,
+                                                  out Pocket goalPocket,
+                                                  out Ball objectBall,
+                                                  out Ball cueBall,
+                                                  out PointF ghostCueBallPosition,
+                                                  out double angleDeg,
+                                                  Image<Bgr, byte> image = null)
+        {
+            var maxScore = -1.0;
+            goalPocket = null;
+            objectBall = null;
+            ghostCueBallPosition = new PointF();
+            angleDeg = double.NaN;
+
+            DiscreteCueBall(allTheBalls, out var numberedBalls, out cueBall);
+
+            foreach (var pocket in pockets)
+            {
+                // For each balls.
+                for (int i = 0; i < numberedBalls.Count; i++)
+                {
+                    var ob = numberedBalls[i];
+                    var gcb = GetGhostCueBallPosition(ob, pocket);
+
+                    var score = Score(cueBall, numberedBalls, i, pocket);
+                    if (score > maxScore)
+                    {
+                        maxScore = score;
+
+                        objectBall = ob;
+                        ghostCueBallPosition = gcb;
+                        goalPocket = pocket;
+                    }
+
+                    if (image != null)
+                    {
+                        var img = Drawing(image, ob, cueBall, gcb, pocket);
+                        img.Save($"paths/[{Math.Round(score)}]{pocket.Id}-{i}.jpg");
+                    }
+                }
+            }
+
+            if (maxScore > 0)
+            {
+                angleDeg = -GetGhostCueBallAngle(cueBall, ghostCueBallPosition) * 180.0 / Math.PI;
+            }
+
+            return maxScore;
+        }
+
+        public static double Score(Ball cueBall, List<Ball> numberedBalls, int objectBallIndex, Pocket goalPocket)
+        {
+            var objectBall = numberedBalls[objectBallIndex];
+            var ghostCueBallPosition = GetGhostCueBallPosition(objectBall, goalPocket);
+
+            if (!IsPossiblePathAngle(cueBall.Position, ghostCueBallPosition, goalPocket.Position))
+            {
+                return -9; // Impossible path.
+            }
+
+            for (int i = 0; i < numberedBalls.Count; i++)
+            {
+                if (i == objectBallIndex)
+                {
+                    continue; // skip self.
+                }
+                var currentBall = numberedBalls[i];
+
+                var path1 = IsPossiblePathBetweenCueBallAndGhostCueBall(cueBall.Position,
+                                                                         ghostCueBallPosition,
+                                                                         currentBall.Position);
+                if (!path1)
+                {
+                    return -1;
+                }
+
+                var path2 = IsPossiblePathBetweenPackageAndGhostCueBall(ghostCueBallPosition,
+                                                                       goalPocket.Position,
+                                                                       currentBall.Position);
+                if (!path2)
+                {
+                    return -2;
+                }
+            }
+
+            var angle = GetAngleBetweenTwoLine(cueBall.Position,
+                                               ghostCueBallPosition,
+                                               objectBall.Position,
+                                               goalPocket.Position);
+
+            var distanceObjectBallToPocket = Distance(objectBall.Position, goalPocket.Position);
+
+            double score = 0.0;
+            score += Math.Abs(90 - Math.Abs(angle)) * (100.0 / 90.0) * 0.85;
+            score += (3721.0 - distanceObjectBallToPocket) * (100.0 / 3271.0) * 0.15;
+            return score;
+        }
+
+        public static void DiscreteCueBall(List<Ball> allTheBalls, out List<Ball> numberedBalls, out Ball cueBall)
+        {
+            cueBall = null;
+            numberedBalls = new List<Ball>();
+
+            foreach (var b in allTheBalls)
+            {
+                if (b.IsCueBall)
+                {
+                    cueBall = b;
+                }
+                else
+                {
+                    numberedBalls.Add(b);
+                }
+            }
+        }
+
         /// <summary>
-        /// 判斷是否爲可行的路徑。
+        /// 判斷是否爲可行的路徑角度。
         /// </summary>
         /// <param name="cueBallPosition">母球位置。</param>
         /// <param name="ghostCueBallPosition">假母球位置。</param>
         /// <param name="pocketPosition">球袋位置。</param>
         /// <returns>是否可行。</returns>
-        public static bool IsPossiblePath(PointF cueBallPosition, PointF ghostCueBallPosition, PointF pocketPosition, PointF objectBallPosition2)
+        public static bool IsPossiblePathAngle(PointF cueBallPosition, PointF ghostCueBallPosition, PointF pocketPosition)
         {
             var isPossible = false;
 
             // Pocket, GhostCue, Cue, GhostCue.
             var angle = GetAngleBetweenTwoLine(pocketPosition, ghostCueBallPosition, cueBallPosition, ghostCueBallPosition);
 
-
-            if (pocketPosition.Y == 0)
+            if (pocketPosition.Y <= 100)
             {
                 if (Math.Abs(angle) <= 95)
                 {
@@ -136,7 +257,7 @@ namespace ExclusiveProgram
                     isPossible = true;
                 }
             }
-            else if (pocketPosition.Y == 400)
+            else if (pocketPosition.Y > 300)
             {
                 if (Math.Abs(angle) >= 85)
                 {
@@ -154,7 +275,16 @@ namespace ExclusiveProgram
 
             return isPossible;
         }
-        public static bool IsPossiblePath_pg(PointF cueBallPosition, PointF ghostCueBallPosition, PointF pocketPosition, PointF objectBallPosition2)
+
+        /// <summary>
+        /// 球袋-假母球路徑阻擋判斷。
+        /// </summary>
+        /// <param name="ghostCueBallPosition"></param>
+        /// <param name="pocketPosition"></param>
+        /// <param name="objectBallPosition2"></param>
+        ///
+        /// <returns></returns>
+        public static bool IsPossiblePathBetweenPackageAndGhostCueBall(PointF ghostCueBallPosition, PointF pocketPosition, PointF objectBallPosition2)
         {
             var isPossible_pg = false;
             /////////球袋-假母球////////////////
@@ -183,7 +313,6 @@ namespace ExclusiveProgram
                     }
                 }
             }
-
             else if (Focus_j(objectBallPosition2, ghostCueBallPosition, pocketPosition) < 0)
             {
                 isPossible_pg = true;
@@ -192,7 +321,16 @@ namespace ExclusiveProgram
 
             return isPossible_pg;
         }
-        public static bool IsPossiblePath_gc(PointF cueBallPosition, PointF ghostCueBallPosition, PointF pocketPosition, PointF objectBallPosition2)
+
+        /// <summary>
+        /// 假母球-母球路徑阻擋判斷。
+        /// </summary>
+        /// <param name="cueBallPosition"></param>
+        /// <param name="ghostCueBallPosition"></param>
+        /// <param name="objectBallPosition2"></param>
+        ///
+        /// <returns></returns>
+        public static bool IsPossiblePathBetweenCueBallAndGhostCueBall(PointF cueBallPosition, PointF ghostCueBallPosition, PointF objectBallPosition2)
         {
             var isPossible_gc = false;
             ////////////假母球-母球////////////////
@@ -233,7 +371,8 @@ namespace ExclusiveProgram
 
             return isPossible_gc;
         }
-            private static Ball FindCueBall(List<Ball> balls)
+
+        private static Ball FindCueBall(List<Ball> balls)
         {
             foreach (var b in balls)
             {
@@ -258,6 +397,46 @@ namespace ExclusiveProgram
         }
 
         #region Basic Math Functions
+
+        //////////座標距離運算/////////////////
+        public static double Distance(PointF a1, PointF a2)
+        {
+            var D = Math.Pow((Math.Pow((a1.X - a2.X), 2) + Math.Pow((a1.Y - a2.Y), 2)), 0.5);
+            return D;
+        }
+
+        /////////////路徑評分///////////////////////////////////////
+        public static double Score(PointF objectBallPosition, PointF objectBallPosition2,
+                                                              PointF objectBallPosition3,
+                                                              PointF objectBallPosition4,
+                                                              PointF CueBallPosition, PointF pocketPosition, PointF ghostCueBallPosition)
+        {
+            var Score = 0;
+            var D_op = Distance(objectBallPosition, pocketPosition);
+            var D_co = Distance(CueBallPosition, objectBallPosition);
+            var isPossible = IsPossiblePathAngle(CueBallPosition, ghostCueBallPosition, pocketPosition);
+            var isPossible_pg = IsPossiblePathBetweenPackageAndGhostCueBall(ghostCueBallPosition, pocketPosition, objectBallPosition2);
+            var isPossible_gc = IsPossiblePathBetweenCueBallAndGhostCueBall(CueBallPosition, ghostCueBallPosition, objectBallPosition2);
+            var isPossible3 = IsPossiblePathAngle(CueBallPosition, ghostCueBallPosition, pocketPosition);
+            var isPossible_pg3 = IsPossiblePathBetweenPackageAndGhostCueBall(ghostCueBallPosition, pocketPosition, objectBallPosition3);
+            var isPossible_gc3 = IsPossiblePathBetweenCueBallAndGhostCueBall(CueBallPosition, ghostCueBallPosition, objectBallPosition3);
+            var isPossible4 = IsPossiblePathAngle(CueBallPosition, ghostCueBallPosition, pocketPosition);
+            var isPossible_pg4 = IsPossiblePathBetweenPackageAndGhostCueBall(ghostCueBallPosition, pocketPosition, objectBallPosition4);
+            var isPossible_gc4 = IsPossiblePathBetweenCueBallAndGhostCueBall(CueBallPosition, ghostCueBallPosition, objectBallPosition4);
+
+            if (isPossible == false || isPossible_gc == false || isPossible_pg == false
+                || isPossible3 == false || isPossible_gc3 == false || isPossible_pg3 == false
+                || isPossible4 == false || isPossible_gc4 == false || isPossible_pg4 == false)
+            {
+                Score = 0;
+            }
+            else
+            {
+                Score = (int)(600 - D_op);
+            }
+
+            return Score;
+        }
 
         /// <summary>
         /// 取得兩點之間的距離。
@@ -381,19 +560,22 @@ namespace ExclusiveProgram
             var CE = Math.Pow((unknown.X - objectBallPosition2.X), 2) + Math.Pow((unknown.Y - objectBallPosition2.Y), 2) - Math.Pow((37.85 * 3 / 2), 2);
             return CE;
         }
+
         /////////直線方程式////////
         private static double LineEquation_a(PointF a1, PointF a2)
-        {  
-           var LEa = (a1.Y - a2.Y) / (a1.X - a2.X);
-           var LEb = (a1.Y) - (a1.X * LEa);
+        {
+            var LEa = (a1.Y - a2.Y) / (a1.X - a2.X);
+            var LEb = (a1.Y) - (a1.X * LEa);
             return LEa;
         }
+
         private static double LineEquation_b(PointF a1, PointF a2)
         {
             var LEa = (a1.Y - a2.Y) / (a1.X - a2.X);
             var LEb = (a1.Y) - (a1.X * LEa);
             return LEb;
         }
+
         private static double LineEquation(PointF ghostCueBallPosition, PointF pocketPosition, PointF unknown)
         {
             var LE_a = LineEquation_a(ghostCueBallPosition, pocketPosition);
@@ -401,12 +583,7 @@ namespace ExclusiveProgram
             var LE_Q = (unknown.X * LE_a) - unknown.Y + LE_b;
             return LE_Q;
         }
-        //////////座標距離運算/////////////////
-        public static double Distance(PointF a1, PointF a2)
-        {
-            var D = Math.Pow((Math.Pow((a1.X - a2.X), 2) + Math.Pow((a1.Y - a2.Y), 2)), 0.5);
-            return D;
-        }
+
         //////////判斷焦點/////////////////
         private static double Focus_j(PointF objectBallPosition2, PointF ghostCueBallPosition, PointF pocketPosition)
         {
@@ -418,16 +595,18 @@ namespace ExclusiveProgram
             var F_Q = Math.Pow(F_b, 2) - (4 * F_a * F_c);
             return F_Q;
         }
+
         private static double Focus_x(PointF objectBallPosition2, PointF ghostCueBallPosition, PointF pocketPosition)
         {
             var LE_a = LineEquation_a(ghostCueBallPosition, pocketPosition);
             var LE_b = LineEquation_b(ghostCueBallPosition, pocketPosition);
             var F_a = 1 + Math.Pow(LE_a, 2);
-            var F_b = (-2 * objectBallPosition2.X)  + (2 * LE_a * LE_b) - (2 * LE_a * objectBallPosition2.Y);
-            var F_c = Math.Pow(objectBallPosition2.X, 2) + Math.Pow(LE_b, 2) - (2 * LE_b * objectBallPosition2.Y) + Math.Pow(objectBallPosition2.Y, 2) - Math.Pow(((37.85 *3 ) / 2), 2);
-            var F_Q = (-F_b + Math.Pow( Math.Pow(F_b, 2) - (4 * F_a * F_c), 0.5)) / (2 * F_a);
+            var F_b = (-2 * objectBallPosition2.X) + (2 * LE_a * LE_b) - (2 * LE_a * objectBallPosition2.Y);
+            var F_c = Math.Pow(objectBallPosition2.X, 2) + Math.Pow(LE_b, 2) - (2 * LE_b * objectBallPosition2.Y) + Math.Pow(objectBallPosition2.Y, 2) - Math.Pow(((37.85 * 3) / 2), 2);
+            var F_Q = (-F_b + Math.Pow(Math.Pow(F_b, 2) - (4 * F_a * F_c), 0.5)) / (2 * F_a);
             return F_Q;
         }
+
         private static double Focus_y(PointF objectBallPosition2, PointF ghostCueBallPosition, PointF pocketPosition)
         {
             var LE_a = LineEquation_a(ghostCueBallPosition, pocketPosition);
@@ -439,39 +618,9 @@ namespace ExclusiveProgram
             var F_Q = (LE_a * F_Q_x) + LE_b;
             return F_Q;
         }
-        /////////////路徑評分///////////////////////////////////////
-        public static double Score(PointF objectBallPosition, PointF objectBallPosition2, 
-                                                              PointF objectBallPosition3,
-                                                              PointF objectBallPosition4,
-                                                              PointF CueBallPosition, PointF pocketPosition, PointF ghostCueBallPosition)
-        {
-            var Score = 0;
-            var D_op = Distance(objectBallPosition, pocketPosition);
-            var D_co = Distance(CueBallPosition, objectBallPosition);
-            var isPossible = IsPossiblePath(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition2);
-            var isPossible_pg = IsPossiblePath_pg(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition2);
-            var isPossible_gc = IsPossiblePath_gc(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition2);
-            var isPossible3 = IsPossiblePath(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition3);
-            var isPossible_pg3 = IsPossiblePath_pg(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition3);
-            var isPossible_gc3 = IsPossiblePath_gc(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition3);
-            var isPossible4 = IsPossiblePath(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition4);
-            var isPossible_pg4 = IsPossiblePath_pg(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition4);
-            var isPossible_gc4 = IsPossiblePath_gc(CueBallPosition, ghostCueBallPosition, pocketPosition, objectBallPosition4);
 
-            if (isPossible == false || isPossible_gc == false || isPossible_pg == false
-                || isPossible3 == false || isPossible_gc3 == false || isPossible_pg3 == false
-                || isPossible4 == false || isPossible_gc4 == false || isPossible_pg4 == false)
-            {
-                Score = 0;
-            }
-            else
-            {
-                Score = (int)(600 - D_op);
-            }
-            
-            return Score;
-        }
         ////////////////////////////////////////////////////////////
+
         #endregion Basic Math Functions
     }
 }
