@@ -22,6 +22,7 @@ namespace ExclusiveProgram.puzzle.visual.framework
 
     public interface ILocator
     {
-        List<LocationResult> Locate(Image<Bgr, byte> rawImage);
+        //List<LocationResult> Locate(Image<Bgr, byte> rawImage);
+        List<LocationResult> Locate(Image<Bgr, byte> rawImage, List<Pocket> pockets);
     }
 }

@@ -16,7 +16,6 @@ namespace ExclusiveProgram.puzzle.visual.concrete
         private readonly IResultMerger merger;
         private PuzzleFactoryListener listener;
         private readonly TaskFactory factory;
-        private readonly CancellationTokenSource cts;
 
         public DefaultBallFactory(ILocator locator, IRecognizer recognizer, IResultMerger merger, int threadCount)
         {
@@ -24,19 +23,16 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             this.locator = locator;
             this.merger = merger;
 
-            // Create a scheduler that uses two threads.
-            LimitedConcurrencyLevelTaskScheduler lcts = new LimitedConcurrencyLevelTaskScheduler(threadCount);
-
             // Create a TaskFactory and pass it our custom scheduler.
-            factory = new TaskFactory(lcts);
-            cts = new CancellationTokenSource();
+            factory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(threadCount));
         }
 
-        public List<Ball> Execute(Image<Bgr, byte> input)
+        public List<Ball> Execute(Image<Bgr, byte> input,List<Pocket> pockets)
         {
-            List<LocationResult> dataList;
+            var cts = new CancellationTokenSource();
 
-            dataList = locator.Locate(input);
+            List<LocationResult> dataList = locator.Locate(input,pockets);
+
             if (listener != null)
                 listener.onLocated(dataList);
 
@@ -53,11 +49,10 @@ namespace ExclusiveProgram.puzzle.visual.concrete
                     results.Add(merger.merge(location, location.ROI, recognized_result));
 
                 }, cts.Token);
-                task.Wait();
                 tasks.Add(task);
             }
 
-            //Task.WaitAll(tasks.ToArray());
+            Task.WaitAll(tasks.ToArray());
             cts.Dispose();
             return results;
         }

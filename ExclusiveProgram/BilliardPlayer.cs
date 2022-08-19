@@ -22,6 +22,7 @@ using MotionParam = RASDK.Arm.AdditionalMotionParameters;
 using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ExclusiveProgram
 {
@@ -37,7 +38,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 手臂擊球位置-低。
         /// </summary>
-        private readonly double _zLower = 50;
+        private readonly double _zLower = 135;
 
         /// <summary>
         /// 預備位置1.
@@ -52,7 +53,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 拍照的位置。笛卡爾座標。
         /// </summary>
-        private double[] _takePiecurePosition => new double[] { 0, 368, 294, 180, 0, 90 };
+        private double[] _takePiecurePosition => new double[] { 12.422,336.336,430.019,180, 0, 90 };
 
         #endregion Position
 
@@ -75,25 +76,17 @@ namespace ExclusiveProgram
         /// </summary>
         private double _cueBallAngle;
 
-        public BilliardPlayer(RoboticArm arm, IDSCamera camera, MessageHandler messageHandler, PictureBox pictureBox, Action hitTheBallFunc)
+        public BilliardPlayer(RoboticArm arm, IDSCamera camera, MessageHandler messageHandler, PictureBox pictureBox, Action hitTheBallFunc, List<Pocket> pockets)
         {
             _arm = arm;
             _camera = camera;
             _messageHandler = messageHandler;
             _pictureBox = pictureBox;
             _hitTheBallFunc = hitTheBallFunc;
+            _pockets = pockets;
+            _ballFactory = MakeBallFactory();
+            _positioner = CCIA.LoadFromCsv("CCIA 2022-08-19_045945.csv");
 
-            _pockets = new List<Pocket>
-            {
-                new Pocket(new PointF(0,0),PocketType.Corner, 0),
-                new Pocket(new PointF(3000,0),PocketType.Corner,1),
-                new Pocket(new PointF(0,2050),PocketType.Corner,2),
-                new Pocket(new PointF(3000,2050),PocketType.Corner,3),
-                new Pocket(new PointF(1500,0),PocketType.Side,4),
-                new Pocket(new PointF(1500,2050),PocketType.Side,5),
-            };
-
-            _positioner = CCIA.LoadFromCsv("ccia_param.csv");
         }
 
         /// <summary>
@@ -104,20 +97,24 @@ namespace ExclusiveProgram
         public void FindThePath(bool saveAllPathImage = false)
         {
             // 到拍照的位置。
-            _arm.Speed = 25;
+            _arm.Speed = 80;
             _arm.MoveAbsolute(_standByPositionJoint1, new MotionParam { CoordinateType = CoordinateType.Joint });
-            _arm.Speed = 30;
+            _arm.Speed = 95;
             _arm.MoveAbsolute(_takePiecurePosition);
+            Thread.Sleep(100);
 
             // 拍照。
             var image = TakeAPicture();
             var previewImage = image.Clone();
 
             // 影像辨識找球。
-            _ballFactory = MakeBallFactory();
-            var balls = _ballFactory.Execute(image);
+            var sw1 = Stopwatch.StartNew();
+            var balls = _ballFactory.Execute(image,_pockets);
+            sw1.Stop();
+            _messageHandler.Log($"影像辨識找球耗時：{sw1.Elapsed}", LoggingLevel.Info);
             foreach (var ball in balls)
             {
+                // 畫上結果。
                 var color = new MCvScalar(0, 0, 0);
                 CvInvoke.Circle(previewImage, Point.Round(ball.Position), (int)ball.Radius, color, 3);
                 var point = new Point((int)(ball.Position.X - ball.Radius), (int)(ball.Position.Y - ball.Radius) - 20);
@@ -129,6 +126,7 @@ namespace ExclusiveProgram
             {
                 image = null;
             }
+            var sw2 = Stopwatch.StartNew();
             var score = CollisionPathPlanningHandler.FindMostPossiblePath(balls,
                                                                           _pockets,
                                                                           out var pocket,
@@ -137,6 +135,8 @@ namespace ExclusiveProgram
                                                                           out var ghostCueBallPosition,
                                                                           out var angleDeg,
                                                                           image);
+            sw2.Stop();
+            _messageHandler.Log($"尋找路徑耗時：{sw2.Elapsed}", LoggingLevel.Info);
             if (score < 0)
             {
                 throw new Exception("無任何可能的路徑。"); // 跳出。
@@ -179,12 +179,12 @@ namespace ExclusiveProgram
             }
 
             // 到母球上方。
-            _arm.Speed = 30;
+            _arm.Speed = 95;
             position[2] = _zUpper;
             _arm.MoveAbsolute(position);
 
             // 下降。。
-            _arm.Speed = 10;
+            _arm.Speed = 20;
             position[2] = _zLower;
             _arm.MoveAbsolute(position, new MotionParam { MotionType = RASDK.Arm.Type.MotionType.Linear });
 
@@ -192,7 +192,7 @@ namespace ExclusiveProgram
             _hitTheBallFunc();
 
             // 回到母球上方。
-            _arm.Speed = 30;
+            _arm.Speed = 95;
             position[2] = _zUpper;
             _arm.MoveAbsolute(position, new MotionParam { MotionType = RASDK.Arm.Type.MotionType.Linear });
 
@@ -210,30 +210,36 @@ namespace ExclusiveProgram
                 MessageBox.Show("復歸");
             }
 
-            _arm.Speed = 30;
+            _arm.Speed = 95;
             _arm.MoveAbsolute(_standByPositionJoint1, new MotionParam { CoordinateType = CoordinateType.Joint });
 
-            _arm.Speed = 25;
+            _arm.Speed = 80;
             _arm.MoveAbsolute(_standByPositionJoint2, new MotionParam { CoordinateType = CoordinateType.Joint });
         }
 
         private Image<Bgr, byte> TakeAPicture()
         {
-            return new Image<Bgr, byte>("test_2.jpg"); // 讀取檔案。
-            //return _camera.GetImage().ToImage<Bgr, byte>(); // 拍照。
+            //return new Image<Bgr, byte>("test_2.jpg"); // 讀取檔案。
+            return _camera.GetImage().ToImage<Bgr, byte>(); // 拍照。
         }
 
         private DefaultBallFactory MakeBallFactory()
         {
-            var ss = new WeightGrayConversionImpl(green_weight: 0.2, blue_weight: 0.4, red_weight: 0.4);
+            var ss = new WeightGrayConversionImpl(green_weight: 0.1, blue_weight: 0.5, red_weight: 0.9);
             var locator = new BallLocator(null,
                                           ss,
-                                          new NormalThresoldImpl(50),
+                                          new NormalThresoldImpl(120),
                                           new DilateErodeBinaryPreprocessImpl(new Size(4, 4)),
-                                          55,
-                                          100);
+                                          110/2,
+                                          140/2);
             var recognizer = new BallRecognizer(null);
             return new DefaultBallFactory(locator, recognizer, new BallResultMerger(), 3);
+        }
+
+        public void MoveToCapturePosition()
+        {
+            _arm.Speed =20;
+            _arm.MoveAbsolute(_takePiecurePosition);
         }
     }
 }

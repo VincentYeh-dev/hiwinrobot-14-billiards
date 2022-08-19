@@ -19,7 +19,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 球的半徑。
         /// </summary>
-        private static readonly double _ballRadius = 87.0;
+        private static readonly double _ballRadius = 130/2;
 
         // TODO
         public static bool Calculate(List<Ball> allTheBalls, Ball objectBall, Pocket pocket)
@@ -160,7 +160,14 @@ namespace ExclusiveProgram
 
             if (maxScore > 0)
             {
-                angleDeg = -GetGhostCueBallAngle(cueBall, ghostCueBallPosition) * 180.0 / Math.PI;
+                if(cueBall.Position.X < objectBall.Position.X)
+                {
+                    angleDeg = -GetGhostCueBallAngle(cueBall, ghostCueBallPosition) * 180.0 / Math.PI;
+                }
+                else 
+                {
+                    angleDeg = -GetGhostCueBallAngle(cueBall, ghostCueBallPosition) * 180.0 / Math.PI + 180;
+                }
             }
 
             return maxScore;
@@ -246,7 +253,7 @@ namespace ExclusiveProgram
             // Pocket, GhostCue, Cue, GhostCue.
             var angle = GetAngleBetweenTwoLine(pocketPosition, ghostCueBallPosition, cueBallPosition, ghostCueBallPosition);
 
-            if (pocketPosition.Y <= 100)
+            if (pocketPosition.Y <= 1000)
             {
                 if (Math.Abs(angle) <= 95)
                 {
@@ -257,7 +264,7 @@ namespace ExclusiveProgram
                     isPossible = true;
                 }
             }
-            else if (pocketPosition.Y > 300)
+            else if (pocketPosition.Y > 1000)
             {
                 if (Math.Abs(angle) >= 85)
                 {

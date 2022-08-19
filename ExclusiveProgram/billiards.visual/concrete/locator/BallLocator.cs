@@ -30,10 +30,22 @@ namespace ExclusiveProgram.puzzle.visual.concrete
         }
 
 
-        public List<LocationResult> Locate(Image<Bgr, byte> rawImage)
+        public List<LocationResult> Locate(Image<Bgr, byte> rawImage,List<Pocket> pockets)
         {
-            var preprocessImage = rawImage.Clone();
+            var maskedImage = new Image<Bgr,byte>(rawImage.Size);
+            rawImage.Mat.CopyTo(maskedImage, GetPocketMask(pockets, rawImage.Size));
+
+            var preprocessImage = maskedImage;
             //CvInvoke.MedianBlur(preprocessImage, preprocessImage, 9);
+            var channels = new VectorOfMat();
+            CvInvoke.Split(preprocessImage, channels);
+            channels[0].Save("results\\channel_B.jpg");
+            channels[1].Save("results\\channel_G.jpg");
+            channels[2].Save("results\\channel_R.jpg");
+            channels[0].Dispose();
+            channels[1].Dispose();
+            channels[2].Dispose();
+            
 
             if (preProcessImpl != null)
                 preProcessImpl.Preprocess(preprocessImage, preprocessImage);
@@ -41,6 +53,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             var grayImage = new Image<Gray, byte>(preprocessImage.Size);
             grayConversionImpl.ConvertToGray(preprocessImage, grayImage);
 
+            grayImage.Save("results/gray.jpg");
             if (thresholdImpl != null)
                 thresholdImpl.Threshold(grayImage, grayImage);
 
@@ -59,11 +72,11 @@ namespace ExclusiveProgram.puzzle.visual.concrete
                 result.Coordinate = circle.Center;
                 result.Radius= circle.Radius;
                 result.ROI = GetROI(result.Coordinate,result.Radius,rawImage);
-                result.ROI.Save($"results/Ball_{result.ID}.jpg");
+                //result.ROI.Save($"results/Ball_{result.ID}.jpg");
                 location_results.Add(result);
                 CvInvoke.Circle(preprocessImage, Point.Round(circle.Center), (int)circle.Radius, new MCvScalar(0, 0, 255),3);
             }
-            preprocessImage.Save("results/circles.jpg");
+            //preprocessImage.Save("results/circles.jpg");
             return location_results;
         }
 
@@ -75,5 +88,17 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             input.ROI = Rectangle.Empty;
             return newImage;
         }
+
+        private Mat GetPocketMask(List<Pocket> pockets,Size sizeOfImage)
+        {
+            var mask = new Image<Bgr, byte>(sizeOfImage.Width,sizeOfImage.Height,new Bgr(255,255,255));
+            foreach(var pocket in pockets)
+            {
+                CvInvoke.Circle(mask, Point.Round(pocket.Position),
+                    (int)pocket.Radius, new MCvScalar(0, 0, 0), -1);
+            }
+            return mask.Mat;
+        }
+
     }
 }

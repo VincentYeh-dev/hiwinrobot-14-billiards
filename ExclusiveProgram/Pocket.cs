@@ -35,10 +35,12 @@ namespace ExclusiveProgram
         /// </summary>
         public readonly PocketType Type;
 
+        public double Radius=170/2;
+
         /// <summary>
         /// 位置。
         /// </summary>
-        public readonly PointF Position;
+        public PointF Position;
 
         /// <summary>
         /// 球袋。
