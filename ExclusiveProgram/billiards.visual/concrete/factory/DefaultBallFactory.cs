@@ -27,11 +27,11 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             factory = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(threadCount));
         }
 
-        public List<Ball> Execute(Image<Bgr, byte> input)
+        public List<Ball> Execute(Image<Bgr, byte> input,List<Pocket> pockets)
         {
             var cts = new CancellationTokenSource();
 
-            List<LocationResult> dataList = locator.Locate(input);
+            List<LocationResult> dataList = locator.Locate(input,pockets);
 
             if (listener != null)
                 listener.onLocated(dataList);

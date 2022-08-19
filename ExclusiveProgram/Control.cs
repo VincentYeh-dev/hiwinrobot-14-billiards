@@ -53,12 +53,12 @@ namespace ExclusiveProgram
             _pockets = new List<Pocket>
             {
                 new Pocket(new PointF(60,250),PocketType.Corner, 0),
-                new Pocket(new PointF(1670, 260),PocketType.Side,1),
-                new Pocket(new PointF(3100, 350),PocketType.Corner,2),
+                new Pocket(new PointF(1570, 230),PocketType.Side,1),
+                new Pocket(new PointF(3090, 320),PocketType.Corner,2),
 
-                new Pocket(new PointF(30, 1800),PocketType.Corner,3),
-                new Pocket(new PointF(1600, 1920),PocketType.Side,4),
-                new Pocket(new PointF(3090, 1930),PocketType.Corner,5),
+                new Pocket(new PointF(50, 1700),PocketType.Corner,3),
+                new Pocket(new PointF(1540, 1760),PocketType.Side,4),
+                new Pocket(new PointF(3010, 1790),PocketType.Corner,5),
             };
 
             if (!Directory.Exists("results"))
@@ -297,7 +297,7 @@ namespace ExclusiveProgram
         {
             var factory=MakeBallFactory();
             var image = _camera.GetImage().ToImage<Bgr, byte>();
-            var balls=factory.Execute(image);
+            var balls=factory.Execute(image,null);
             var preview_image = image.Clone();
             foreach(var ball in balls)
             {
@@ -320,6 +320,11 @@ namespace ExclusiveProgram
                                           80);
             var recognizer = new BallRecognizer(null);
             return new DefaultBallFactory(locator, recognizer, new BallResultMerger(), 3);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            _billiardPlayer.MoveToCapturePosition();
         }
     }
 }
