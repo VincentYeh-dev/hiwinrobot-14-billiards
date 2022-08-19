@@ -85,7 +85,8 @@ namespace ExclusiveProgram
             _hitTheBallFunc = hitTheBallFunc;
             _pockets = pockets;
             _ballFactory = MakeBallFactory();
-            _positioner = CCIA.LoadFromCsv("ccia.csv");
+            _positioner = CCIA.LoadFromCsv("ccia_param.csv");
+
         }
 
         /// <summary>
