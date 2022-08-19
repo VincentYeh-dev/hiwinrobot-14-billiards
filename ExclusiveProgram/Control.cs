@@ -52,13 +52,13 @@ namespace ExclusiveProgram
 
             _pockets = new List<Pocket>
             {
-                new Pocket(new PointF(0,0),PocketType.Corner, 0),
-                new Pocket(new PointF(1500,0),PocketType.Side,1),
-                new Pocket(new PointF(3000,0),PocketType.Corner,2),
+                new Pocket(new PointF(60,250),PocketType.Corner, 0),
+                new Pocket(new PointF(1670, 260),PocketType.Side,1),
+                new Pocket(new PointF(3100, 350),PocketType.Corner,2),
 
-                new Pocket(new PointF(0,2050),PocketType.Corner,3),
-                new Pocket(new PointF(1500,2050),PocketType.Side,4),
-                new Pocket(new PointF(3000,2050),PocketType.Corner,5),
+                new Pocket(new PointF(30, 1800),PocketType.Corner,3),
+                new Pocket(new PointF(1600, 1920),PocketType.Side,4),
+                new Pocket(new PointF(3090, 1930),PocketType.Corner,5),
             };
 
             if (!Directory.Exists("results"))
@@ -103,6 +103,7 @@ namespace ExclusiveProgram
             {
                 _camera = new IDSCamera(MessageHandler);
                 _camera.Connect();
+                _camera.LoadParameterFromEEPROM();
                 _billiardPlayer = new BilliardPlayer(Arm, _camera, MessageHandler, pictureBoxMain, () => HitTheBall(), _pockets);
 
                 // Serial port.
@@ -181,11 +182,11 @@ namespace ExclusiveProgram
 
         private void buttonGetImage_Click(object sender, EventArgs e)
         {
-            //var img = _camera.GetImage();
-            var img = new Image<Bgr, byte>("test_1.jpg");
-            pictureBoxMain.Image = img.ToBitmap();
-            //_sourceImage = img.ToImage<Bgr, byte>();
-            _sourceImage = img;
+            var img = _camera.GetImage();
+            //var img = new Image<Bgr, byte>("test_1.jpg");
+            pictureBoxMain.Image = img;
+            _sourceImage = img.ToImage<Bgr, byte>();
+            //_sourceImage = img;
 
             UpdatePocketImage();
         }
@@ -291,5 +292,34 @@ namespace ExclusiveProgram
         }
 
         #endregion Pocket
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var factory=MakeBallFactory();
+            var image = _camera.GetImage().ToImage<Bgr, byte>();
+            var balls=factory.Execute(image);
+            var preview_image = image.Clone();
+            foreach(var ball in balls)
+            {
+                CvInvoke.Circle(preview_image, Point.Round(ball.Position), (int)ball.Radius, new MCvScalar(0,0 , 255), 3);
+                var p = new Point((int)(ball.Position.X - ball.Radius),(int)(ball.Position.Y - ball.Radius)-20);
+                CvInvoke.PutText(preview_image,$"{ball.Type}",p,Emgu.CV.CvEnum.FontFace.HersheyPlain,3, new MCvScalar(0,0, 255));
+                Console.WriteLine($"ID:{ball.ID} -> {ball.Type}");
+            }
+            preview_image.Save("results\\result.jpg");
+        }
+
+        private DefaultBallFactory MakeBallFactory()
+        {
+            var ss = new WeightGrayConversionImpl(green_weight: 0.1, blue_weight: 0.5, red_weight: 0.9);
+            var locator = new BallLocator(null,
+                                          ss,
+                                          new NormalThresoldImpl(120),
+                                          new DilateErodeBinaryPreprocessImpl(new Size(4, 4)),
+                                          35,
+                                          80);
+            var recognizer = new BallRecognizer(null);
+            return new DefaultBallFactory(locator, recognizer, new BallResultMerger(), 3);
+        }
     }
 }
