@@ -38,7 +38,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 手臂擊球位置-低。
         /// </summary>
-        private readonly double _zLower = 50;
+        private readonly double _zLower = 135;
 
         /// <summary>
         /// 預備位置1.
@@ -53,7 +53,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 拍照的位置。笛卡爾座標。
         /// </summary>
-        private double[] _takePiecurePosition => new double[] { 7.225,330.464,417.625, 180, 0, 90 };
+        private double[] _takePiecurePosition => new double[] { 12.422,336.336,430.019,180, 0, 90 };
 
         #endregion Position
 
@@ -85,7 +85,7 @@ namespace ExclusiveProgram
             _hitTheBallFunc = hitTheBallFunc;
             _pockets = pockets;
             _ballFactory = MakeBallFactory();
-            _positioner = CCIA.LoadFromCsv("ccia_param.csv");
+            _positioner = CCIA.LoadFromCsv("CCIA 2022-08-19_045945.csv");
 
         }
 
@@ -184,7 +184,7 @@ namespace ExclusiveProgram
             _arm.MoveAbsolute(position);
 
             // 下降。。
-            _arm.Speed = 50;
+            _arm.Speed = 20;
             position[2] = _zLower;
             _arm.MoveAbsolute(position, new MotionParam { MotionType = RASDK.Arm.Type.MotionType.Linear });
 
@@ -234,6 +234,12 @@ namespace ExclusiveProgram
                                           80);
             var recognizer = new BallRecognizer(null);
             return new DefaultBallFactory(locator, recognizer, new BallResultMerger(), 3);
+        }
+
+        public void MoveToCapturePosition()
+        {
+            _arm.Speed =20;
+            _arm.MoveAbsolute(_takePiecurePosition);
         }
     }
 }
