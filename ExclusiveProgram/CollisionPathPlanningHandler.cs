@@ -19,7 +19,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 球的半徑。
         /// </summary>
-        private static readonly double _ballRadius = 75;
+        private static readonly double _ballRadius = 130/2;
 
         // TODO
         public static bool Calculate(List<Ball> allTheBalls, Ball objectBall, Pocket pocket)

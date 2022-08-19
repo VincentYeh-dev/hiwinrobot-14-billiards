@@ -18,7 +18,8 @@ namespace ExclusiveProgram.puzzle.visual.concrete
     }
     public interface IBallFactory
     {
-        List<Ball> Execute(Image<Bgr, byte> input);
+        //List<Ball> Execute(Image<Bgr, byte> input);
+        List<Ball> Execute(Image<Bgr, byte> input, List<Pocket> pockets);
         void setListener(PuzzleFactoryListener listener);
     }
 }

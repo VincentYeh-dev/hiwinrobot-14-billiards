@@ -109,7 +109,7 @@ namespace ExclusiveProgram
 
             // 影像辨識找球。
             var sw1 = Stopwatch.StartNew();
-            var balls = _ballFactory.Execute(image);
+            var balls = _ballFactory.Execute(image,_pockets);
             sw1.Stop();
             _messageHandler.Log($"影像辨識找球耗時：{sw1.Elapsed}", LoggingLevel.Info);
             foreach (var ball in balls)
@@ -230,8 +230,8 @@ namespace ExclusiveProgram
                                           ss,
                                           new NormalThresoldImpl(120),
                                           new DilateErodeBinaryPreprocessImpl(new Size(4, 4)),
-                                          35,
-                                          80);
+                                          110/2,
+                                          140/2);
             var recognizer = new BallRecognizer(null);
             return new DefaultBallFactory(locator, recognizer, new BallResultMerger(), 3);
         }

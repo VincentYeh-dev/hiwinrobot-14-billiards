@@ -297,7 +297,7 @@ namespace ExclusiveProgram
         {
             var factory=MakeBallFactory();
             var image = _camera.GetImage().ToImage<Bgr, byte>();
-            var balls=factory.Execute(image);
+            var balls=factory.Execute(image,null);
             var preview_image = image.Clone();
             foreach(var ball in balls)
             {
