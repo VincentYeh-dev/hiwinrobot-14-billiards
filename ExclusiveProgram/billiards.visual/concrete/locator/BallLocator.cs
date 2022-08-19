@@ -34,6 +34,15 @@ namespace ExclusiveProgram.puzzle.visual.concrete
         {
             var preprocessImage = rawImage.Clone();
             //CvInvoke.MedianBlur(preprocessImage, preprocessImage, 9);
+            var channels = new VectorOfMat();
+            CvInvoke.Split(preprocessImage, channels);
+            channels[0].Save("results\\channel_B.jpg");
+            channels[1].Save("results\\channel_G.jpg");
+            channels[2].Save("results\\channel_R.jpg");
+            channels[0].Dispose();
+            channels[1].Dispose();
+            channels[2].Dispose();
+            
 
             if (preProcessImpl != null)
                 preProcessImpl.Preprocess(preprocessImage, preprocessImage);
@@ -41,6 +50,7 @@ namespace ExclusiveProgram.puzzle.visual.concrete
             var grayImage = new Image<Gray, byte>(preprocessImage.Size);
             grayConversionImpl.ConvertToGray(preprocessImage, grayImage);
 
+            grayImage.Save("results/gray.jpg");
             if (thresholdImpl != null)
                 thresholdImpl.Threshold(grayImage, grayImage);
 

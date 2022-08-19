@@ -53,7 +53,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 拍照的位置。笛卡爾座標。
         /// </summary>
-        private double[] _takePiecurePosition => new double[] { 0, 368, 294, 180, 0, 90 };
+        private double[] _takePiecurePosition => new double[] { 7.225,330.464,417.625, 180, 0, 90 };
 
         #endregion Position
 
@@ -84,9 +84,9 @@ namespace ExclusiveProgram
             _pictureBox = pictureBox;
             _hitTheBallFunc = hitTheBallFunc;
             _pockets = pockets;
-
             _ballFactory = MakeBallFactory();
             _positioner = CCIA.LoadFromCsv("ccia_param.csv");
+
         }
 
         /// <summary>
@@ -101,6 +101,7 @@ namespace ExclusiveProgram
             _arm.MoveAbsolute(_standByPositionJoint1, new MotionParam { CoordinateType = CoordinateType.Joint });
             _arm.Speed = 95;
             _arm.MoveAbsolute(_takePiecurePosition);
+            Thread.Sleep(100);
 
             // 拍照。
             var image = TakeAPicture();
@@ -218,19 +219,19 @@ namespace ExclusiveProgram
 
         private Image<Bgr, byte> TakeAPicture()
         {
-            return new Image<Bgr, byte>("test_2.jpg"); // 讀取檔案。
-            //return _camera.GetImage().ToImage<Bgr, byte>(); // 拍照。
+            //return new Image<Bgr, byte>("test_2.jpg"); // 讀取檔案。
+            return _camera.GetImage().ToImage<Bgr, byte>(); // 拍照。
         }
 
         private DefaultBallFactory MakeBallFactory()
         {
-            var ss = new WeightGrayConversionImpl(green_weight: 0.2, blue_weight: 0.4, red_weight: 0.4);
+            var ss = new WeightGrayConversionImpl(green_weight: 0.1, blue_weight: 0.5, red_weight: 0.9);
             var locator = new BallLocator(null,
                                           ss,
-                                          new NormalThresoldImpl(50),
+                                          new NormalThresoldImpl(120),
                                           new DilateErodeBinaryPreprocessImpl(new Size(4, 4)),
-                                          55,
-                                          100);
+                                          35,
+                                          80);
             var recognizer = new BallRecognizer(null);
             return new DefaultBallFactory(locator, recognizer, new BallResultMerger(), 3);
         }
