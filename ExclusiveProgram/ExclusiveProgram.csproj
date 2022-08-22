@@ -116,8 +116,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="uEyeDotNet">
-      <HintPath>\\robotnas\Public\PackageReferences_x64\uEyeDotNet.dll</HintPath>
+    <Reference Include="uEyeDotNet, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Documents\PackageReferences_x64\uEyeDotNet.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
