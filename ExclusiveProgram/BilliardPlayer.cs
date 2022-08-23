@@ -38,7 +38,7 @@ namespace ExclusiveProgram
         /// <summary>
         /// 手臂擊球位置-低。
         /// </summary>
-        private readonly double _zLower = 135;
+        private readonly double _zLower = 92.625;
 
         /// <summary>
         /// 預備位置1.

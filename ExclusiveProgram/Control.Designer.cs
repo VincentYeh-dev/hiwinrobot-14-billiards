@@ -55,10 +55,10 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(29, 161);
+            this.button1.Location = new System.Drawing.Point(23, 125);
             this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(71, 44);
+            this.button1.Size = new System.Drawing.Size(55, 34);
             this.button1.TabIndex = 0;
             this.button1.Text = "Test";
             this.button1.UseVisualStyleBackColor = true;
@@ -66,10 +66,10 @@
             // 
             // buttonInit
             // 
-            this.buttonInit.Location = new System.Drawing.Point(29, 58);
-            this.buttonInit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.buttonInit.Location = new System.Drawing.Point(23, 45);
+            this.buttonInit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonInit.Name = "buttonInit";
-            this.buttonInit.Size = new System.Drawing.Size(71, 48);
+            this.buttonInit.Size = new System.Drawing.Size(55, 37);
             this.buttonInit.TabIndex = 1;
             this.buttonInit.Text = "Init";
             this.buttonInit.UseVisualStyleBackColor = true;
@@ -77,10 +77,10 @@
             // 
             // pictureBoxMain
             // 
-            this.pictureBoxMain.Location = new System.Drawing.Point(264, 28);
-            this.pictureBoxMain.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBoxMain.Location = new System.Drawing.Point(205, 22);
+            this.pictureBoxMain.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBoxMain.Name = "pictureBoxMain";
-            this.pictureBoxMain.Size = new System.Drawing.Size(832, 510);
+            this.pictureBoxMain.Size = new System.Drawing.Size(647, 397);
             this.pictureBoxMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxMain.TabIndex = 2;
             this.pictureBoxMain.TabStop = false;
@@ -88,22 +88,20 @@
             // checkBoxShowMessage
             // 
             this.checkBoxShowMessage.AutoSize = true;
-            this.checkBoxShowMessage.Checked = true;
-            this.checkBoxShowMessage.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxShowMessage.Location = new System.Drawing.Point(29, 28);
-            this.checkBoxShowMessage.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.checkBoxShowMessage.Location = new System.Drawing.Point(23, 22);
+            this.checkBoxShowMessage.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxShowMessage.Name = "checkBoxShowMessage";
-            this.checkBoxShowMessage.Size = new System.Drawing.Size(137, 22);
+            this.checkBoxShowMessage.Size = new System.Drawing.Size(107, 18);
             this.checkBoxShowMessage.TabIndex = 3;
             this.checkBoxShowMessage.Text = "Show Message";
             this.checkBoxShowMessage.UseVisualStyleBackColor = true;
             // 
             // buttonReady
             // 
-            this.buttonReady.Location = new System.Drawing.Point(29, 112);
+            this.buttonReady.Location = new System.Drawing.Point(23, 87);
             this.buttonReady.Margin = new System.Windows.Forms.Padding(2);
             this.buttonReady.Name = "buttonReady";
-            this.buttonReady.Size = new System.Drawing.Size(71, 44);
+            this.buttonReady.Size = new System.Drawing.Size(55, 34);
             this.buttonReady.TabIndex = 0;
             this.buttonReady.Text = "Ready";
             this.buttonReady.UseVisualStyleBackColor = true;
@@ -111,10 +109,10 @@
             // 
             // buttonGetImage
             // 
-            this.buttonGetImage.Location = new System.Drawing.Point(6, 47);
+            this.buttonGetImage.Location = new System.Drawing.Point(5, 37);
             this.buttonGetImage.Margin = new System.Windows.Forms.Padding(2);
             this.buttonGetImage.Name = "buttonGetImage";
-            this.buttonGetImage.Size = new System.Drawing.Size(112, 44);
+            this.buttonGetImage.Size = new System.Drawing.Size(87, 34);
             this.buttonGetImage.TabIndex = 0;
             this.buttonGetImage.Text = "拍照";
             this.buttonGetImage.UseVisualStyleBackColor = true;
@@ -133,11 +131,11 @@
             this.groupBox1.Controls.Add(this.radioButtonPocket1);
             this.groupBox1.Controls.Add(this.radioButtonPocket3);
             this.groupBox1.Controls.Add(this.radioButtonPocket0);
-            this.groupBox1.Location = new System.Drawing.Point(29, 232);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox1.Location = new System.Drawing.Point(23, 180);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Size = new System.Drawing.Size(228, 437);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBox1.Size = new System.Drawing.Size(177, 340);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "球袋位置調整";
@@ -145,18 +143,20 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 317);
+            this.label2.Location = new System.Drawing.Point(6, 247);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(25, 18);
+            this.label2.Size = new System.Drawing.Size(20, 14);
             this.label2.TabIndex = 2;
             this.label2.Text = "Y:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 280);
+            this.label1.Location = new System.Drawing.Point(6, 218);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(25, 18);
+            this.label1.Size = new System.Drawing.Size(20, 14);
             this.label1.TabIndex = 2;
             this.label1.Text = "X:";
             // 
@@ -167,15 +167,15 @@
             0,
             0,
             0});
-            this.numericUpDownPocketY.Location = new System.Drawing.Point(38, 314);
-            this.numericUpDownPocketY.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.numericUpDownPocketY.Location = new System.Drawing.Point(30, 244);
+            this.numericUpDownPocketY.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.numericUpDownPocketY.Maximum = new decimal(new int[] {
             4000,
             0,
             0,
             0});
             this.numericUpDownPocketY.Name = "numericUpDownPocketY";
-            this.numericUpDownPocketY.Size = new System.Drawing.Size(135, 29);
+            this.numericUpDownPocketY.Size = new System.Drawing.Size(105, 24);
             this.numericUpDownPocketY.TabIndex = 1;
             this.numericUpDownPocketY.ValueChanged += new System.EventHandler(this.numericUpDownPocketY_ValueChanged);
             // 
@@ -186,25 +186,25 @@
             0,
             0,
             0});
-            this.numericUpDownPocketX.Location = new System.Drawing.Point(38, 277);
-            this.numericUpDownPocketX.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.numericUpDownPocketX.Location = new System.Drawing.Point(30, 215);
+            this.numericUpDownPocketX.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.numericUpDownPocketX.Maximum = new decimal(new int[] {
             4000,
             0,
             0,
             0});
             this.numericUpDownPocketX.Name = "numericUpDownPocketX";
-            this.numericUpDownPocketX.Size = new System.Drawing.Size(135, 29);
+            this.numericUpDownPocketX.Size = new System.Drawing.Size(105, 24);
             this.numericUpDownPocketX.TabIndex = 1;
             this.numericUpDownPocketX.ValueChanged += new System.EventHandler(this.numericUpDownPocketX_ValueChanged);
             // 
             // radioButtonPocket5
             // 
             this.radioButtonPocket5.AutoSize = true;
-            this.radioButtonPocket5.Location = new System.Drawing.Point(7, 247);
-            this.radioButtonPocket5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.radioButtonPocket5.Location = new System.Drawing.Point(5, 192);
+            this.radioButtonPocket5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.radioButtonPocket5.Name = "radioButtonPocket5";
-            this.radioButtonPocket5.Size = new System.Drawing.Size(92, 22);
+            this.radioButtonPocket5.Size = new System.Drawing.Size(71, 18);
             this.radioButtonPocket5.TabIndex = 0;
             this.radioButtonPocket5.Text = "右下 紫";
             this.radioButtonPocket5.UseVisualStyleBackColor = true;
@@ -213,10 +213,10 @@
             // radioButtonPocket2
             // 
             this.radioButtonPocket2.AutoSize = true;
-            this.radioButtonPocket2.Location = new System.Drawing.Point(7, 157);
-            this.radioButtonPocket2.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.radioButtonPocket2.Location = new System.Drawing.Point(5, 122);
+            this.radioButtonPocket2.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.radioButtonPocket2.Name = "radioButtonPocket2";
-            this.radioButtonPocket2.Size = new System.Drawing.Size(92, 22);
+            this.radioButtonPocket2.Size = new System.Drawing.Size(71, 18);
             this.radioButtonPocket2.TabIndex = 0;
             this.radioButtonPocket2.Text = "右上 黃";
             this.radioButtonPocket2.UseVisualStyleBackColor = true;
@@ -225,10 +225,10 @@
             // radioButtonPocket4
             // 
             this.radioButtonPocket4.AutoSize = true;
-            this.radioButtonPocket4.Location = new System.Drawing.Point(7, 217);
-            this.radioButtonPocket4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.radioButtonPocket4.Location = new System.Drawing.Point(5, 169);
+            this.radioButtonPocket4.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.radioButtonPocket4.Name = "radioButtonPocket4";
-            this.radioButtonPocket4.Size = new System.Drawing.Size(92, 22);
+            this.radioButtonPocket4.Size = new System.Drawing.Size(71, 18);
             this.radioButtonPocket4.TabIndex = 0;
             this.radioButtonPocket4.Text = "中下 藍";
             this.radioButtonPocket4.UseVisualStyleBackColor = true;
@@ -237,10 +237,10 @@
             // radioButtonPocket1
             // 
             this.radioButtonPocket1.AutoSize = true;
-            this.radioButtonPocket1.Location = new System.Drawing.Point(7, 127);
-            this.radioButtonPocket1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.radioButtonPocket1.Location = new System.Drawing.Point(5, 99);
+            this.radioButtonPocket1.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.radioButtonPocket1.Name = "radioButtonPocket1";
-            this.radioButtonPocket1.Size = new System.Drawing.Size(92, 22);
+            this.radioButtonPocket1.Size = new System.Drawing.Size(71, 18);
             this.radioButtonPocket1.TabIndex = 0;
             this.radioButtonPocket1.Text = "中上 橙";
             this.radioButtonPocket1.UseVisualStyleBackColor = true;
@@ -249,10 +249,10 @@
             // radioButtonPocket3
             // 
             this.radioButtonPocket3.AutoSize = true;
-            this.radioButtonPocket3.Location = new System.Drawing.Point(7, 187);
-            this.radioButtonPocket3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.radioButtonPocket3.Location = new System.Drawing.Point(5, 145);
+            this.radioButtonPocket3.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.radioButtonPocket3.Name = "radioButtonPocket3";
-            this.radioButtonPocket3.Size = new System.Drawing.Size(92, 22);
+            this.radioButtonPocket3.Size = new System.Drawing.Size(71, 18);
             this.radioButtonPocket3.TabIndex = 0;
             this.radioButtonPocket3.Text = "左下 綠";
             this.radioButtonPocket3.UseVisualStyleBackColor = true;
@@ -262,10 +262,10 @@
             // 
             this.radioButtonPocket0.AutoSize = true;
             this.radioButtonPocket0.Checked = true;
-            this.radioButtonPocket0.Location = new System.Drawing.Point(7, 97);
-            this.radioButtonPocket0.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.radioButtonPocket0.Location = new System.Drawing.Point(5, 75);
+            this.radioButtonPocket0.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.radioButtonPocket0.Name = "radioButtonPocket0";
-            this.radioButtonPocket0.Size = new System.Drawing.Size(92, 22);
+            this.radioButtonPocket0.Size = new System.Drawing.Size(71, 18);
             this.radioButtonPocket0.TabIndex = 0;
             this.radioButtonPocket0.TabStop = true;
             this.radioButtonPocket0.Text = "左上 紅";
@@ -274,9 +274,10 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(127, 58);
+            this.button2.Location = new System.Drawing.Point(99, 45);
+            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(89, 48);
+            this.button2.Size = new System.Drawing.Size(69, 37);
             this.button2.TabIndex = 5;
             this.button2.Text = "button2";
             this.button2.UseVisualStyleBackColor = true;
@@ -284,9 +285,10 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(127, 112);
+            this.button3.Location = new System.Drawing.Point(99, 87);
+            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(89, 44);
+            this.button3.Size = new System.Drawing.Size(69, 34);
             this.button3.TabIndex = 6;
             this.button3.Text = "button3";
             this.button3.UseVisualStyleBackColor = true;
@@ -294,7 +296,7 @@
             // 
             // Control
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -306,7 +308,7 @@
             this.Controls.Add(this.button1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Control";
-            this.Size = new System.Drawing.Size(1281, 700);
+            this.Size = new System.Drawing.Size(996, 544);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxMain)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
